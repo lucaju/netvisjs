@@ -1,6 +1,6 @@
 {
-  "name": "netvis",
-  "version": "1.1.1",
+  "name": "netvisjs",
+  "version": "0.1.0",
   "description": "Network Visualization",
   "keywords": [
     "Network Visualization"
@@ -9,21 +9,17 @@
   "license": "CC-BY-NC-4.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/lucaju/netvis"
+    "url": "https://github.com/lucaju/netvisjs"
   },
   "main": "index.js",
   "scripts": {
-    "watch": "webpack --watch",
-    "watchReset": "webpack --config webpack.passreset.config.js --watch",
-    "watchInstall": "webpack --config webpack.install.config.js --watch",
-    "production": "webpack --config webpack.prod.config.js --progress",
-    "productionReset": "webpack --config webpack.passreset.prod.config.js --progress",
-    "productionInstall": "webpack --config webpack.install.prod.config --progress",
-    "productionAll": "webpack --config webpack.prod.config.js --progress && webpack --config webpack.install.prod.config.js --progress && webpack --config webpack.passreset.prod.config.js --progress"
+    "start": "env-cmd nodemon ./server/index",
+    "cm": "git-cz",
+    "build-dev-watch": "webpack --config webpack.dev.js --debug=true --display-error-details=true  --watch",
+    "build": "webpack --config webpack.prod.js"
   },
   "dependencies": {
-    "acorn": "^7.1.0",
-    "acorn-jsx": "^5.1.0",
+    "acorn": "^7.1.1",
     "angular": "^1.7.9",
     "angular-animate": "^1.7.9",
     "angular-aria": "^1.7.9",
@@ -31,37 +27,60 @@
     "angular-messages": "^1.7.9",
     "angular-resource": "^1.7.9",
     "angular-sanitize": "^1.7.9",
+    "bcryptjs": "^2.4.3",
     "blob-polyfill": "^4.0.20190430",
+    "body-parser": "^1.19.0",
+    "chalk": "^3.0.0",
     "d3": "^5.14.2",
+    "dotenv": "^8.2.0",
+    "env-cmd": "^10.1.0",
+    "express": "^4.17.1",
     "file-saver": "^2.0.2",
+    "got": "^10.7.0",
     "gsap": "^3.0.1",
     "jlouvain": "^2.0.0",
+    "jsonwebtoken": "^8.5.1",
     "jszip": "^3.2.2",
     "luxon": "^1.21.3",
+    "mongoose": "^5.9.6",
     "ng-device-detector": "^5.1.4",
     "papaparse": "^5.1.0",
     "password-generator": "^2.2.3",
     "re-tree": "^0.1.7",
     "save-svg-as-png": "^1.4.14",
-    "v-accordion": "^1.6.0"
+    "v-accordion": "^1.6.0",
+    "validator": "^13.0.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.9.0",
+    "@babel/plugin-transform-runtime": "^7.9.0",
+    "@babel/preset-env": "^7.9.0",
+    "babel-eslint": "^10.1.0",
+    "babel-loader": "^8.1.0",
     "clean-webpack-plugin": "^3.0.0",
-    "copy-webpack-plugin": "^5.0.5",
-    "css-loader": "^3.2.0",
-    "eslint": "^6.7.1",
-    "file-loader": "^5.0.2",
-    "html-loader": "^0.5.5",
-    "html-webpack-plugin": "^3.2.0",
+    "commitizen": "^4.0.3",
+    "copy-webpack-plugin": "^5.1.1",
+    "css-loader": "^3.4.2",
+    "eslint": "^6.8.0",
+    "file-loader": "^6.0.0",
+    "git-cz": "^4.3.1",
+    "html-loader": "^1.0.0",
+    "html-webpack-plugin": "^4.0.2",
     "html-webpack-template": "^6.2.0",
-    "mini-css-extract-plugin": "^0.8.0",
-    "style-loader": "^1.0.0",
-    "svg-inline-loader": "^0.8.0",
-    "webpack": "^4.41.2",
-    "webpack-bundle-analyzer": "^3.6.0",
-    "webpack-cli": "^3.3.10",
-    "webpack-dev-middleware": "^3.7.2",
-    "webpack-dev-server": "^3.9.0",
+    "mini-css-extract-plugin": "^0.9.0",
+    "nodemon": "^2.0.2",
+    "style-loader": "^1.1.3",
+    "svg-inline-loader": "^0.8.2",
+    "webpack": "^4.42.1",
+    "webpack-bundle-analyzer": "^3.6.1",
+    "webpack-cli": "^3.3.11",
+    "webpack-dev-server": "^3.10.3",
+    "webpack-merge": "^4.2.2",
     "webpackbar": "^4.0.0"
+  },
+  "config": {
+    "commitizen": {
+      "path": "git-cz"
+    }
   }
 }
