@@ -74,6 +74,7 @@ userSchema.methods.toJSON = function () {
 
 	delete userObject.password;
 	delete userObject.tokens;
+	delete userObject.passwordResetTokens;
 
 	return userObject;
 };
@@ -101,9 +102,19 @@ userSchema.methods.generatePwdToken = async function () {
 	};
 
 	user.passwordResetTokens = user.passwordResetTokens.concat(resetRequest);
-
 	await user.save();
 
+	return token;
+};
+
+userSchema.methods.usePwdToken = async function (token) {
+	const user = this;
+	const passwordReset = user.passwordResetTokens.find( pr => {
+		if (pr.token === token) return pr;
+	});
+	passwordReset.used = true;
+	
+	await user.save();
 	return token;
 };
 
@@ -114,6 +125,12 @@ userSchema.statics.findByCredentials = async (email, password) => {
 	const isMatch = await bcrypt.compare(password, user.password);
 	if (!isMatch) throw new Error('Unable to login');
 
+	return user;
+};
+
+userSchema.statics.findByEmail = async (email) => {
+	const user = await User.findOne({email});
+	if (!user) throw new Error('User not found!');
 	return user;
 };
 

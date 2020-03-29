@@ -1,5 +1,6 @@
 require('dotenv').config();
 const express = require('express');
+const {DateTime} = require ('luxon');
 // const util = require('util');
 // const chalk = require('chalk');
 const auth = require('../middleware/auth');
@@ -50,6 +51,8 @@ router.patch('/:id', auth, async (req, res) => {
 	const allowedUpdates = ['firstName', 'lastName', 'email', 'password', 'level'];
 	const isValidOperation = updates.every((update) => allowedUpdates.includes(update));
 
+	const passwordUpdate = allowedUpdates.find( type => type === 'password');
+
 	if (!isValidOperation) {
 		return res.status(400).send({ error: 'Invalid updates!' });
 	}
@@ -65,6 +68,8 @@ router.patch('/:id', auth, async (req, res) => {
 		}
 
 		updates.forEach((update) => user[update] = req.body[update]);
+		if (passwordUpdate) user.tokens = [];
+
 		await user.save();
 		res.send(user);
 
@@ -99,7 +104,7 @@ router.delete('/:id', auth, async (req, res) => {
 router.post('/login', async (req, res) => {
 	try {
 		const user = await User.findByCredentials(req.body.email, req.body.password);
-		console.log(user);
+		console.log(User);
         const token = await user.generateAuthToken();
         res.send({ user, token });
     } catch (e) {
@@ -130,40 +135,43 @@ router.post('/logoutAll', auth, async (req, res) => {
 router.post('/forgotPassword', async (req, res) => {
 	const userEmail = req.body.email;
 
-	const user = await User.find({email: userEmail})
-		.catch( (error) => {
-			res.status(404).send(error);
-		});
+	const user = await User.findByEmail(userEmail)
+		.catch((error) => res.status(404).send(error));
 
-	const token = user.generatePwdToken();
+	const token = await user.generatePwdToken();
 	// sendResetPasswordEmail(user.id, user.email, token)
 	res.status(200).send();
 
 });
 
-router.post('/resetPassword/:id/:token', async (req, res) => {
+router.get('/resetPassword/:id/:token', async (req, res) => {
 	const userID = mongoose.Types.ObjectId(req.params.id);
-	const token = req.params.token;
+	const passToken = req.params.token;
 
-	
+	//find user
+	const user = await User.findById(userID)
+		.catch((error) => res.status(404).send(error));
 
-	const user = await User.find({
-		_uid: userID,
-		'passwordResetTokens.token': token,
-		used: false,
-	}).catch( (error) => {
-		res.status(404).send(error);
+	//find token
+	const passwordReset = user.passwordResetTokens.find( pr => {
+		if (pr.token === passToken && pr.used === false) return pr;
 	});
 
-	//todo
-		//test date: expire in 30 days
-		// compare  now with the date
+	//Token not found or already used
+	if (passwordReset === undefined) return res.status(404).send('Token expired or not found');
 
-		//if success, save request as used.
+	//Token expires in X days
+	const now = DateTime.utc();
+	const tokenDate = DateTime.fromJSDate(passwordReset.date);
+	const diffInDays = now.diff(tokenDate, 'days');
 
-	
+	if (diffInDays.toObject().days > 5) return res.status(406).send('Token expired');
 
-	res.status(200).send(user);
+	//ok, mark token as used
+	await user.usePwdToken(passToken);
+
+	//pass user indo to the interface
+	res.status(200).send({user});
 });
 
 module.exports = router;
