@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 
+
 const nodeSchema = mongoose.Schema({
 	name: {
 		type: String,
@@ -11,26 +12,20 @@ const nodeSchema = mongoose.Schema({
 		required: true,
 		trim: true
 	},
-	relations: {
-        type: [nodeSchema],
-	},
+	relations: [{
+		type : mongoose.Schema.ObjectId,
+		ref : 'Node'
+	}]
 }, {
 	timestamps: true
 });
 
-nodeSchema.methods.toJSON = function () {
-	const node = this;
-	const nodeObject = node.toObject();
-	return nodeObject;
-};
+nodeSchema.virtual('relationships', {
+    ref: 'nodeSchema',
+    localField: '_id',
+    foreignField: 'relations'
+});
 
-// Delete node relations when user is removed
-// nodeSchema.pre('remove', async function (next) {
-//     const node = this;
-//     // await Node.deleteMany({ owner: user._id });
-//     next();
-// });
-
-const Node = mongoose.model('User', nodeSchema);
+const Node = mongoose.model('Node', nodeSchema);
 
 module.exports = Node;
