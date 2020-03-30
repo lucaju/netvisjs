@@ -1,8 +1,9 @@
-const mongoose = require('mongoose');
-const {DateTime} = require ('luxon');
-const validator = require('validator');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const {DateTime} = require ('luxon');
+const mongoose = require('mongoose');
+const validator = require('validator');
+
 
 const userSchema = mongoose.Schema({
 	firstName: {

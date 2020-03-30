@@ -1,12 +1,10 @@
-require('dotenv').config();
 const express = require('express');
 const {DateTime} = require ('luxon');
-// const util = require('util');
-// const chalk = require('chalk');
+const mongoose = require('mongoose');
+
 const auth = require('../middleware/auth');
 const User = require('../models/user');
 
-const mongoose = require('mongoose');
 
 const router = new express.Router();
 router.use(express.json());
