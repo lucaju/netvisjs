@@ -29,7 +29,6 @@ app.use((req, res, next) => {
 	next(err);
 });
 
-
 app.listen(port, () => {
 	mongoDB.connect();
 	console.log(`App listening on port ${port}!`);
