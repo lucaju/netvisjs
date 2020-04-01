@@ -17,7 +17,8 @@ const nodeSchema = mongoose.Schema({
 		ref : 'Node'
 	}]
 }, {
-	timestamps: true
+	timestamps: true,
+	strict: false
 });
 
 nodeSchema.virtual('relationships', {

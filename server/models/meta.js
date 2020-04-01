@@ -41,7 +41,8 @@ const metaSchema = mongoose.Schema({
 		}
 	},
 }, {
-	timestamps: true
+	timestamps: true,
+	strict: false
 });
 
 const Meta = mongoose.model('Meta', metaSchema);
