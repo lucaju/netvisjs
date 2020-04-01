@@ -37,7 +37,7 @@ router.get('/:prop', async (req, res) => {
 });
 
 /**
- * PORT Meta Property
+ * POST Meta Property
  * 
  * @async
  * @function
