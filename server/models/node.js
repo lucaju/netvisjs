@@ -26,6 +26,9 @@ nodeSchema.virtual('relationships', {
     foreignField: 'relations'
 });
 
+nodeSchema.statics.findByName = async name => await Node.findOne({name});
+nodeSchema.statics.findByNameType = async (name, type) => await Node.findOne({name, type});
+
 const Node = mongoose.model('Node', nodeSchema);
 
 module.exports = Node;
