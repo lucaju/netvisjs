@@ -1,30 +1,41 @@
 
-const chalk = require('chalk');
 const mongoose = require('mongoose');
 
-// const mongoURI = (process.env.useLocalDB === 'true') ? process.env.MONGODB_LOCAL_URL : process.env.MONGODB_REMOTE_URL;
+let mongoURI = `mongodb://${process.env.MONGODB_HOST}:${process.env.MONGODB_PORT}/${process.env.MONGODB_DATABASE}`;
 
-const mongoURI = 'mongodb://127.0.0.1:27017/netvisjs';
+const connect = async (credentials) => {
 
-const connect = async () => {
+	//check credentials
+	if (!process.env.MONGODB_HOST
+        || !process.env.MONGODB_PORT
+		|| !process.env.MONGODB_DATABASE) {
 
-	try {
-		await mongoose.connect(mongoURI, {
-			useNewUrlParser: true,
-			useUnifiedTopology: true,
-			useCreateIndex: true,
-			useFindAndModify: false
-		});
-		return true;
+		if (!credentials) {
+			throw new Error('Redirect to install');
+		}
+    } 
 
-	} catch (err) {
-		console.log(chalk.red(err.name));
+	//check overwrite credentials
+	if (credentials) {
+		mongoURI = `mongodb://${credentials.host}:${credentials.port}/${credentials.database}`;
+	} else {
+		mongoURI = `mongodb://${process.env.MONGODB_HOST}:${process.env.MONGODB_PORT}/${process.env.MONGODB_DATABASE}`;
 	}
+
+	//connect
+	await mongoose.connect(mongoURI, {
+		useNewUrlParser: true,
+		useUnifiedTopology: true,
+		useCreateIndex: true,
+		useFindAndModify: false
+	}).catch(error => {
+		throw new Error(error);
+	});
+
+	return true;	
 };
 
-const close = () => {
-	mongoose.connection.close();
-};
+const close = async () => await mongoose.connection.close();
 
 module.exports = {
 	connect,

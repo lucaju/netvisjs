@@ -11,12 +11,7 @@ const metaSchema = mongoose.Schema({
 	url: {
 		type: String,
 		required: true,
-        trim: true,
-        validate(value) {
-			if (!validator.isURL(value)) {
-				throw new Error('Url is invalid');
-			}
-		}
+        trim: true
 	},
 	email: {
 		type: String,
