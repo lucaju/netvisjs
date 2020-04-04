@@ -80,8 +80,8 @@ module.exports = {
 			cleanStaleWebpackAssets: false
 		}),
 		new HtmlWebpackPlugin({
-			template: './src/index.php',
-			filename: 'index.php',
+			template: './src/index.html',
+			filename: 'index.html',
 			chunks: ['app'],
 			inject: 'head'
 		}),
@@ -128,19 +128,24 @@ module.exports = {
 				from: 'src/assets/',
 				to: './assets'
 			},
-			{
-				from: 'src/api',
-				to: './api'
-			},
-			{
-				from: 'src/vendor',
-				to: './vendor'
-			},
-			{
-				from: './src/install/*.php',
-				to: './install/[name].php',
-				toType: 'template'
-			}
+			// {
+			// 	from: 'src/api',
+			// 	to: './api'
+			// },
+			// {
+			// 	from: 'src/vendor',
+			// 	to: './vendor'
+			// },
+			// {
+			// 	from: './src/install/*.htom',
+			// 	to: './install/[name].html',
+			// 	toType: 'template'
+			// },
+			// {
+			// 	from: './src/reset/*.htom',
+			// 	to: './install/[name].html',
+			// 	toType: 'template'
+			// }
 		])
 	],
 // optimization: {
