@@ -171,7 +171,7 @@ const init = () => {
 					'Content-Type': 'application/json'
 				},
 				data: payload
-			}
+			};
 
 			$http(req).then( res => {
 
@@ -205,16 +205,10 @@ const init = () => {
 		};
 
 		//---------- Close
-
-		$scope.closeDialog = data => {
-			$scope.mdPanelRef.close();
-		};
+		$scope.closeDialog = () => $scope.mdPanelRef.close();
 
 		//---------- Resize
-
-		$scope.eventResize = () => {
-			$scope.updatePosition();
-		};
+		$scope.eventResize = () => $scope.updatePosition();
 
 		$scope.updatePosition = () => {
 			const position = $mdPanel.newPanelPosition()

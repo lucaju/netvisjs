@@ -1,5 +1,5 @@
+import angular from 'angular';
 import {app} from '../../AppConfig';
-
 import UserInfoEditCtrl from '../settings/user/UserInfoEditCtrl';
 
 const init = () => {
@@ -108,8 +108,8 @@ const init = () => {
 			//
 			const titleField = document.getElementById('title-input');
 			const sendgridField = document.getElementById('sendgrid-input');
-			titleField.addEventListener("focusout", titleChange);
-			sendgridField.addEventListener("focusout", sendgridChange);
+			titleField.addEventListener('focusout', titleChange);
+			sendgridField.addEventListener('focusout', sendgridChange);
 
 			//load data;
 			if ($scope.usersAccountData.length === 0) loadUsers();
@@ -117,30 +117,30 @@ const init = () => {
 
 		});
 
-		const titleChange = e => {
+		const titleChange = () => {
 			if ($scope.project.title !== originalTitle) {
 				originalTitle = $scope.project.title;
-				updateMeta({title: $scope.project.title})
+				updateMeta({title: $scope.project.title});
 			}
-		}
+		};
 
 		const sendgridChange = e => {
 			if ($scope.sendgridAPI !== e.target.value) {
 				$scope.sendgridAPI = e.target.value;
-				updateMeta({sendgridAPI: $scope.sendgridAPI})
+				updateMeta({sendgridAPI: $scope.sendgridAPI});
 			}
-		}
+		};
 
 		const updateMeta = data => {
 			const req = {
 				method: 'POST',
-				url: `api/meta/update.php`,
+				url: 'api/meta/update.php',
 				headers: {
 					'Accept': 'application/json',
 					'Content-Type': 'application/json'
 				},
 				data
-			}
+			};
 
 			$http(req).then( res => {
 
@@ -152,14 +152,14 @@ const init = () => {
 				}
 
 				if (res.data.action === 'updated') {
-					$scope.showSimpleToastTag("Updated.");
+					$scope.showSimpleToastTag('Updated.');
 				}
 				
 
 			}, res => {
 				$scope.showSimpleToastTag('An error occurred!');
 			});
-		}
+		};
 
 		const loadUsers = () => {
 			$http.get('api/user/read.php').then( res => {
@@ -168,7 +168,7 @@ const init = () => {
 			}, res => {
 				// console.log(res);
 			});
-		}
+		};
 
 		const loadsendgridAPI = () => {
 			$http.get('api/meta/read_sendgrid.php').then( res => {
@@ -177,7 +177,7 @@ const init = () => {
 			}, res => {
 				// console.log(res);
 			});
-		} 
+		};
 
 		$scope.$on('userAction', (event,userData) => {
 			

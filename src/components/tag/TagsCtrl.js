@@ -1,4 +1,4 @@
-// import angular from 'angular';
+import angular from 'angular';
 
 import {app} from '../../AppConfig';
 
@@ -137,7 +137,7 @@ const init = () => {
 			for (const tag of $scope.dataNodes) {
 				tag.selected = false;
 				tag.weight = 0;
-			};
+			}
 
 			if ($scope.searchQuery.selected === true) $scope.filterTagByType(false);
 
@@ -178,10 +178,7 @@ const init = () => {
 
 			$http.get(`api/node/read_one.php?id=${id}`).then( res => {
 
-				if (res.status !== 200) {
-					console.log(data);
-					return false;
-				}
+				if (res.status !== 200) return false;
 
 				const node = res.data;
 				showTagInfoPanelWithData(node);

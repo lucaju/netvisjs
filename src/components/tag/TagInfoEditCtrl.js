@@ -385,7 +385,7 @@ const init = () => {
 					'Content-Type': 'application/json'
 				},
 				data: payload
-			}
+			};
 
 			$http(req).then( res => {
 

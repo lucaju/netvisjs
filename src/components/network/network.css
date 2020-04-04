@@ -1,12 +1,11 @@
 
-#graph svg {
-  /*background-color: #000;*/
-}
+/* #graph svg {
+  background-color: #000;
+} */
 
 #graph .node .circle {
   stroke-width: 1.5px;
   stroke-aligment: inner;
-  
 }
 
 #graph .node .nodeTitle {
@@ -41,9 +40,9 @@
 	font-size: 0.8em;
 }
 
-.fixed-panel {
+/* .fixed-panel { */
 /*  min-width: 100px;*/
   /*min-width: 300px;*/
  /* width: 400px;
   overflow-y: scroll;*/
-}
+/* } */

@@ -49,7 +49,7 @@ const init = () => {
 					id: n.id,
 					name: n.name,
 					type: n.type
-				})
+				});
 
 				//list edges
 				if (n.relations) {
@@ -59,11 +59,11 @@ const init = () => {
 							target: e.name,
 							sourceType: n.type,
 							targetType: e.type
-						})
+						});
 					}
 				}
 
-			};
+			}
 
 			//parser
 			const nodesCSV = Papa.unparse(nodesToExport);
@@ -84,7 +84,7 @@ const init = () => {
 
 			deliverDataset(data);
 
-		}
+		};
 
 		const exportJson = () => {
 			
@@ -97,8 +97,8 @@ const init = () => {
 					name: n.name,
 					type: n.type,
 					edges: n.relations
-				})
-			};
+				});
+			}
 
 			//parser
 			const nodesJson = JSON.stringify(networkToExport, null, ' ');
@@ -113,7 +113,7 @@ const init = () => {
 
 			deliverDataset(data);
 
-		}
+		};
 
 		const deliverDataset = exportCollection => {
 			
@@ -144,7 +144,7 @@ const init = () => {
 				}
 
 			}
-		}
+		};
 
 		//************* */
 
@@ -188,7 +188,7 @@ const init = () => {
 				if (node.x > graphRight) graphRight = node.x;
 				if (node.y > graphBottom) graphBottom = node.y;
 
-			};
+			}
 
 			graphLeft = graphLeft - margin;
 			graphTop = graphTop - margin;
@@ -255,7 +255,7 @@ const init = () => {
 				$scope.triggerLayoutUpdate('gooeyFX');
 				$rootScope.$broadcast('exportGraph', $scope.graphFileType);
 			}
-		}
+		};
 
 		const exportSVG = () => {
 
@@ -287,7 +287,7 @@ const init = () => {
 				});
 				saveAs(blob, 'network.svg');
 			}
-		}
+		};
 
 	});
 

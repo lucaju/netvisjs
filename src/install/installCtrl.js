@@ -9,16 +9,16 @@ const init = () => {
 			name: undefined,
 			user: undefined,
 			password: undefined
-		}
+		};
 		$scope.project = {
 			title: undefined,
 			url: undefined,
 			sendGridAPI: undefined
-		}
+		};
 		$scope.user = {
 			email: undefined,
 			password: undefined
-		}
+		};
 
 		$scope.getDatabaseDisable = () => {
 			if (!$scope.database.name) return true;
@@ -46,40 +46,40 @@ const init = () => {
 		
 		$scope.init = () => {
 			sendDBTest();
-		}
+		};
 
 		const sendDBTest = () => {
 
-			const req = {
-				method: 'POST',
-				url: '../api/shared/test_db.php',
-				headers: {
-					'Accept': 'application/json',
-					'Content-Type': 'application/json'
-				},
-				data: $scope.database
-			}
+			// const req = {
+			// 	method: 'POST',
+			// 	url: '../api/shared/test_db.php',
+			// 	headers: {
+			// 		'Accept': 'application/json',
+			// 		'Content-Type': 'application/json'
+			// 	},
+			// 	data: $scope.database
+			// }
 
-			$http(req).then( res => {
+			// $http(req).then( res => {
 
-				if(res.status !== 200) $scope.error = true;
+			// 	if(res.status !== 200) $scope.error = true;
 
-				//if instalation already exists
-				if(res.data.env === true) {
-					console.log(window.location);
-					$scope.status = 'exist';
-				}
+			// 	//if instalation already exists
+			// 	if(res.data.env === true) {
+			// 		console.log(window.location);
+			// 		$scope.status = 'exist';
+			// 	}
 				
-				// if forms is filled correctly
-				if ($scope.database.name && $scope.database && $scope.database) {
-					$scope.error = false;
-					$scope.status = 'project';
-				}
+			// 	// if forms is filled correctly
+			// 	if ($scope.database.name && $scope.database && $scope.database) {
+			// 		$scope.error = false;
+			// 		$scope.status = 'project';
+			// 	}
 
-			}, res => {
-				if ($scope.status === 'database') $scope.error = true;
-				$scope.status = 'database';
-			});
+			// }, res => {
+			// 	if ($scope.status === 'database') $scope.error = true;
+			// 	$scope.status = 'database';
+			// });
 
 		};
 
@@ -98,14 +98,14 @@ const init = () => {
 					project: $scope.project,
 					user: $scope.user
 				}
-			}
+			};
 
 			$http(req).then( res => {
 				$scope.error = false;
 				$scope.status = 'success';
 
 				console.log(res);
-				$scope.project.url = res.data.metadata.url
+				$scope.project.url = res.data.metadata.url;
 
 				setTimeout(() => {
 					window.location.href = $scope.project.url ;
@@ -119,7 +119,7 @@ const init = () => {
 		};
 		
 	});
-}
+};
 
 export default {
 	init

@@ -18,9 +18,9 @@ const init = () => {
 			logged: false,
 			credentials: null,
 			level: 2
-		}
+		};
 
-		$scope.login = async () => {
+		$scope.login = () => {
 
 			$scope.credentials.action = 'checkCredentials';
 
@@ -32,7 +32,7 @@ const init = () => {
 					'Content-Type': 'application/json'
 				},
 				data: $scope.credentials
-			}
+			};
 
 			$http(req).then( res => {
 
@@ -51,9 +51,9 @@ const init = () => {
 				}
 			});
 
-		}
+		};
 
-		$scope.submitEmail = async () => {
+		$scope.submitEmail = () => {
 
 			$scope.forgot.action = 'reset';
 
@@ -65,7 +65,7 @@ const init = () => {
 					'Content-Type': 'application/json'
 				},
 				data: $scope.forgot
-			}
+			};
 
 			$http(req).then( res => {
 

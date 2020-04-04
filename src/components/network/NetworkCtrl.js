@@ -8,7 +8,7 @@
 // import {timer} from 'd3-timer';
 // import {drag} from 'd3-drag';
 
-import angular from 'angular';
+// import angular from 'angular';
 import {jLouvain} from 'jlouvain';
 import * as d3 from 'd3';
 
@@ -111,7 +111,7 @@ const init = () => {
 				for (const nodeRelation of tag.linksRemoved) {
 					changeNodeWeight(tag.id, nodeRelation, -1);
 					_node.weight--;
-				};
+				}
 			}
 
 			//load data
@@ -1114,7 +1114,7 @@ const init = () => {
 						const linkIndex = $scope.netVis.links.indexOf(link);
 						$scope.netVis.links.splice(linkIndex, 1);
 					}
-				};
+				}
 
 				//test remove orphaned nodes
 				if (sourceTag.weight <= 0) $scope.eventRemove(sourceTag, 'cluster');
@@ -1162,7 +1162,7 @@ const init = () => {
 					// angular.forEach($scope.netVis.nodes, node => {
 					for (const node of $scope.netVis.nodes) {
 						if (node === link.source || node === link.target) node.weight--;
-					};
+					}
 
 				}
 			});

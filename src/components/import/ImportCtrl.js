@@ -62,7 +62,6 @@ const init = () => {
 						}
 					},
 					error: res => {
-						console.log(log);
 						$scope.showSimpleToastTag('An error occurred!');
 						$scope.$digest();
 					}

@@ -13,9 +13,7 @@ const init = () => {
 		};
 		
 		
-		$scope.getInitialData = async ({action,requestID}) => {
-
-			console.log(action)
+		$scope.getInitialData = ({action,requestID}) => {
 
 			$scope.request.action = action;
 			$scope.request.reqID = requestID;
@@ -41,7 +39,6 @@ const init = () => {
 				}
 
 				if (res.data.error) {
-					console.log(res)
 					$scope.request.status = 'error';
 					$scope.request.error = res.data.error;
 					return;
@@ -57,7 +54,7 @@ const init = () => {
 
 		};
 			
-		$scope.submit = async () => {
+		$scope.submit = () => {
 			const data = {
 				id: $scope.request.userID,
 				password: $scope.request.password
@@ -71,7 +68,7 @@ const init = () => {
 					'Content-Type': 'application/json'
 				},
 				data: data
-			}
+			};
 
 			$http(req).then( res => {
 
@@ -96,7 +93,7 @@ const init = () => {
 		};
 		
 	});
-}
+};
 
 export default {
 	init

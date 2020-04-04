@@ -36,7 +36,7 @@ const init = () => {
 				if (relation.type === 'Department') $scope.departments.push(relation);
 				if (relation.type === 'Researcher') $scope.researchers.push(relation);
 				if (relation.type === 'Interest') $scope.interests.push(relation);
-			};
+			}
 		}
 
 		$scope.tagRelationChipTypeStyle = ({type}) => {
