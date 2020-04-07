@@ -52,8 +52,6 @@ const init = () => {
 		// $scope.$on('dataLoaded', event => {
 		const startSimulation = () => {
 
-			// console.log(d3.select('#side').node().getBoundingClientRect().width);
-			// console.log(d3.select('#stage').node().getBoundingClientRect());
 			// networkContainerWidth = window.innerWidth - d3.select('#side').node().getBoundingClientRect().width; // full window (-)side panel
 
 			networkContainerWidth = d3.select('#stage').node().getBoundingClientRect().width; // full window (-)side panel
@@ -116,16 +114,14 @@ const init = () => {
 
 			//load data
 			// if (!_node || tag.linksAdded) {
-			$http.get(`api/node/read_one.php?id=${tag.id}`).then( res => {
+			$http.get(`/nodes/${tag.id}`).then( res => {
 
-				if (res.status === 204) return [];
+				if (res.status === 404 || res.status === 500) return [];
 
 				if (res.data && res.data.relations) {
 
 					//add metada - relation to node;
 					tag.relations = res.data.relations;
-
-					console.log(res);
 
 					for (const relation of tag.relations) {
 	
@@ -133,13 +129,13 @@ const init = () => {
 						let endobj = relation;
 	
 						//add to relatoon 
-						index = $scope.testInById(relation.id, $scope.netVis.researchers);
+						index = $scope.testInById(relation._id, $scope.netVis.researchers);
 						if (index > -1) endobj = $scope.netVis.researchers[index];
 	
-						index = $scope.testInById(relation.id, $scope.netVis.nodes);
+						index = $scope.testInById(relation._id, $scope.netVis.nodes);
 						if (index > -1) endobj = $scope.netVis.nodes[index];
 	
-						const nodeRelated = getNodeById(endobj.id);
+						const nodeRelated = getNodeById(endobj._id);
 						if (!nodeRelated) {
 						// if ($scope.netVis.nodes.indexOf(endobj) === -1) {
 							endobj.weight = 0;
@@ -157,7 +153,6 @@ const init = () => {
 
 				
 			}, res => {
-				console.log(res);
 				return false;
 			});
 			// } else {
@@ -544,7 +539,7 @@ const init = () => {
 
 					// if there attribute wight is defined ------- 
 					// const scale = d3.scaleLinear()
-					// 	.domain([0, d3.max(linksData, d => { console.log(d); return d.weight; })])
+					// 	.domain([0, d3.max(linksData, d => { return d.weight; })])
 					// 	.range([minLinkWidth, maxLinkWidth]);
 
 					// link.style('stroke-width', d => scale(d.weight) )
@@ -1100,7 +1095,6 @@ const init = () => {
 			const targetTag = getNodeById(targetTagID);
 
 			//reduce weight
-			// console.log(targetTag)
 			if (sourceTag && targetTag) {
 				
 				targetTag.weight += value;

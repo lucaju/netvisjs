@@ -23,7 +23,7 @@
                         <label class="md-body-1">File Type</label>
                         <md-select ng-model="fileExtension" class="md-body-1 no-vertical-margin">
                             <md-option ng-value="option"
-                                ng-repeat="option in fileExtensionOptions">
+                                ng-repeat="option in fileTypes">
                                 {{ option }}
                             </md-option>
                         </md-select>
@@ -32,9 +32,9 @@
                             ng-model="csvDataStructure"
                             ng-if="fileExtension === 'csv'">
                             <div flex layout="row">
-                                <div ng-repeat='option in csvDataStructureOptions'>
+                                <div ng-repeat='option in dataTypes'>
                                     <md-radio-button value="{{option}}"
-                                        ng-click="changeCSVDataStructure(option)" 
+                                        ng-click="changeDataType(option)"
                                         class="md-primary">
                                         {{option}}
                                     </md-radio-button>

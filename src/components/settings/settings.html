@@ -53,20 +53,20 @@
  
             <md-list flex class="md-dense">
                 <md-list-item class="md-2-line"
-                                ng-repeat="item in usersAccountData | orderBy:'first'"
-                                ng-mouseenter="showEditAccountButton(item.id,true)"
+                                ng-repeat="item in usersAccountData | orderBy:'firstName'"
+                                ng-mouseenter="showEditAccountButton(item._id,true)"
                                 ng-mouseleave="showEditAccountButton(false)">
                     <md-icon ng-class="{'md-warn':item.level == 1, 'md-accent':item.level == 0}"
                                 md-font-icon="material-icons">person</md-icon>
                     <div class="md-list-item-text" layout="column">
-                        <h3>{{item.first}} {{item.last}}
+                        <h3>{{item.firstName}} {{item.lastName}}
                             <md-icon ng-if="item.new"
                                      md-font-icon="material-icons md-18">fiber_new</md-icon>
                         </h3>
                         <h4>{{item.email}}</h4>
                     </div>
                     <md-icon class="md-secondary"
-                                ng-if="editAccountButtonVisibility(item.id)"
+                                ng-if="editAccountButtonVisibility(item._id)"
                                 ng-click="showEditUserPanel(item)"
                                 aria-label="edit"
                                 md-font-icon="material-icons md-18">edit</md-icon>

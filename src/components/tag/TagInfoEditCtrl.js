@@ -117,7 +117,7 @@ const init = () => {
 			let repeated = false;
 			// angular.forEach($scope.relations, function(relation) {
 			angular.forEach(source, relation => {
-				if (chip.id === relation.id) repeated = true;
+				if (chip._id === relation._id) repeated = true;
 			});
 
 			if (repeated) return null;
@@ -150,7 +150,7 @@ const init = () => {
 		const checkChanges = () => {
 
 			const PL = {
-				id: $scope.tag.id,
+				id: $scope.tag._id,
 				type: $scope.tag.type
 			};
 
@@ -201,7 +201,7 @@ const init = () => {
 			if ($scope.relationToDelete.length > 0) {
 				if (PL.relationToDelete === undefined) PL.relationToDelete = [];
 				angular.forEach($scope.relationToDelete, rel => {
-					PL.relationToDelete.push(rel.id);
+					PL.relationToDelete.push(rel._id);
 				});
 			}
 
@@ -212,16 +212,16 @@ const init = () => {
 						if (rel.type === 'Researcher') {
 							if (PL.relationToDelete === undefined) {
 								PL.relationToDelete = [];
-								PL.relationToDelete.push(rel.id);
+								PL.relationToDelete.push(rel._id);
 
 							} else {
 
 								for (let i = 0; i < PL.relationToDelete.length; i++) {
 
-									if (rel.id === PL.relationToDelete[i]) {
+									if (rel._id === PL.relationToDelete[i]) {
 										break;
 									} else {
-										PL.relationToDelete.push(rel.id);
+										PL.relationToDelete.push(rel._id);
 									}
 								}
 							}
@@ -235,16 +235,16 @@ const init = () => {
 						if (rel.type === 'Department' || rel.type === 'Interest') {
 							if (PL.relationToDelete === undefined) {
 								PL.relationToDelete = [];
-								PL.relationToDelete.push(rel.id);
+								PL.relationToDelete.push(rel._id);
 
 							} else {
 
 								for (let i = 0; i < PL.relationToDelete.length; i++) {
 
-									if (rel.id === PL.relationToDelete[i]) {
+									if (rel._id === PL.relationToDelete[i]) {
 										break;
 									} else {
-										PL.relationToDelete.push(rel.id);
+										PL.relationToDelete.push(rel._id);
 									}
 								}
 							}
@@ -263,7 +263,7 @@ const init = () => {
 					angular.forEach($scope.relationToAdd, rel => {
 						if (rel.type === 'Department' || rel.type === 'Interest') {
 							if (PL.relationToAdd === undefined) PL.relationToAdd = [];
-							PL.relationToAdd.push(rel.id);
+							PL.relationToAdd.push(rel._id);
 						}
 					});
 				}
@@ -274,7 +274,7 @@ const init = () => {
 					angular.forEach($scope.relationToAdd, rel => {
 						if (rel.type === 'Researcher') {
 							if (PL.relationToAdd === undefined) PL.relationToAdd = [];
-							PL.relationToAdd.push(rel.id);
+							PL.relationToAdd.push(rel._id);
 						}
 					});
 				}
@@ -365,31 +365,52 @@ const init = () => {
 			$mdBottomSheet.cancel();
 		};
 
+		const cleanPayload = data => {
+			if (data.type === 'Department') {
+				delete data.first;
+				delete data.last;
+			} else if (data.type === 'Interest') {
+				delete data.first;
+				delete data.last;
+				delete data.website;
+			}
+			delete data.action;
+			return data;
+		};
+
 		const submitData = payload => {
 
-			let APIEndPoint;
+			const action = payload.action;
 
-			if (payload.action === 'add') {
-				APIEndPoint = 'create.php';
-			} else if (payload.action === 'update') {
-				APIEndPoint = 'update.php';
-			} else if (payload.action === 'remove') {
-				APIEndPoint = 'delete.php';
-			}
-
-			const req = {
-				method: 'POST',
-				url: `api/node/${APIEndPoint}`,
+			const request = {
+				url: '/nodes',
 				headers: {
-					'Accept': 'application/json',
-					'Content-Type': 'application/json'
-				},
-				data: payload
+					Accept: 'application/json',
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${$rootScope.user.token}`
+				}
 			};
 
-			$http(req).then( res => {
+			if (action === 'add') {
+				request.method = 'POST';
+				delete payload.id;
+			} else if (action === 'update') {
+				request.method = 'PATCH';
+				request.url += `/${payload.id}`;
+			} else if (action === 'remove') {
+				request.method = 'DELETE';
+				request.url += `/${payload.id}`;
+			}
 
-				if (res.status === 503) return false;
+			request.data = cleanPayload(payload);
+			
+
+			$http(request).then( res => {
+
+				if (res.status === 500 || res.status === 404) {
+					$scope.showSimpleToastTag('An error occurred!');
+					return false;
+				}
 
 				if (!res.data) {
 					$scope.showSimpleToastTag('An error occurred!');
@@ -399,10 +420,13 @@ const init = () => {
 				const msg = (payload.action === 'remove') ? 'Entry deleted!' : 'Saved!';
 				$scope.showSimpleToastTag(msg);
 
-				$scope.closeDialog(res.data);
+				$scope.closeDialog({
+					action: action,
+					data: res.data
+				});
 
-			}, res => {
-				console.log(res);
+			}, error => {
+				console.log(error);
 			});
 
 		};
@@ -413,7 +437,7 @@ const init = () => {
 			$mdBottomSheet.cancel();
 
 			$scope.payload = {
-				id: $scope.tag.id,
+				id: $scope.tag._id,
 				action: 'remove'
 			};
 

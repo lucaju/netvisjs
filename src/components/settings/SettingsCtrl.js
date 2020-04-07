@@ -59,7 +59,7 @@ const init = () => {
 
 			//configurations
 			const config = {
-				id: user.id,
+				id: user._id,
 				animation: animation,
 				attachTo: document.querySelector('#viz-port'),
 				controller: 'UserInfoEditCtrl',
@@ -90,7 +90,7 @@ const init = () => {
 
 		$scope.getUserById = userID => {
 			for (let i = 0; i < $scope.usersAccountData.length; i++) {
-				if ($scope.usersAccountData[i].id === userID) return $scope.usersAccountData[i];
+				if ($scope.usersAccountData[i]._id === userID) return $scope.usersAccountData[i];
 			}
 			return null;
 		};
@@ -133,11 +133,12 @@ const init = () => {
 
 		const updateMeta = data => {
 			const req = {
-				method: 'POST',
-				url: 'api/meta/update.php',
+				method: 'PATCH',
+				url: '/meta',
 				headers: {
-					'Accept': 'application/json',
-					'Content-Type': 'application/json'
+					Accept: 'application/json',
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${$rootScope.user.token}`
 				},
 				data
 			};
@@ -162,7 +163,13 @@ const init = () => {
 		};
 
 		const loadUsers = () => {
-			$http.get('api/user/read.php').then( res => {
+			$http.get('/users',{
+				headers: {
+					Accept: 'application/json',
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${$rootScope.user.token}`
+				}
+			}).then( res => {
 				if (res.status !== 200) return [];
 				$scope.usersAccountData = res.data;
 			}, res => {
@@ -171,38 +178,38 @@ const init = () => {
 		};
 
 		const loadsendgridAPI = () => {
-			$http.get('api/meta/read_sendgrid.php').then( res => {
+			$http.get('/meta/sendgridAPI').then( res => {
 				if (res.status !== 200) return;
-				$scope.sendgridAPI = res.data.sendgridAPI;
+				$scope.sendgridAPI = res.data;
 			}, res => {
 				// console.log(res);
 			});
 		};
 
-		$scope.$on('userAction', (event,userData) => {
+		$scope.$on('userAction', (event,{action,data}) => {
 			
 			$scope.infoPanel = null;
 			
-			if (userData.action === 'created') {
+			if (action === 'create') {
 
-				userData.new = true;
-				$scope.usersAccountData.push(userData);
+				data.new = true;
+				$scope.usersAccountData.push(data);
 
-			} else if (userData.action === 'updated') {
+			} else if (action === 'update') {
 
-				const user = $scope.getUserById(userData.id);
+				const user = $scope.getUserById(data._id);
 
 				if (user !== null) {
-					if (userData.level !== null) user.level = userData.level;
-					if (userData.email !== null) user.email = userData.email;
-					if (userData.first !== null) user.first = userData.first;
-					if (userData.last !== null) user.last = userData.last;
+					if (data.level !== null) user.level = data.level;
+					if (data.email !== null) user.email = data.email;
+					if (data.firstName !== null) user.firstName = data.firstName;
+					if (data.lastName !== null) user.lastName = data.lastName;
 					user.new = true;
 				}
 
-			} if (userData.action === 'deleted') {
+			} else if (action === 'delete') {
 
-				const user = $scope.getUserById(userData.id);
+				const user = $scope.getUserById(data._id);
 
 				if (user !== null) {
 					const index = $scope.usersAccountData.indexOf(user);

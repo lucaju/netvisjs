@@ -56,6 +56,8 @@ const init = () => {
 
 				$scope.payload = checkChanges();
 
+				$scope.payload._id = $scope.user._id;
+
 				$scope.payload.action = $scope.action;
 				$scope.payload.invitation = $scope.user.emailInvitation;
 
@@ -103,7 +105,7 @@ const init = () => {
 		const checkChanges = () => {
 
 			const PL = {
-				id: $scope.user.id
+				id: $scope.user._id
 			};
 
 			// --- checks
@@ -111,8 +113,8 @@ const init = () => {
 			PL.level = $scope.user.level;
 			if ($scope.user.email !== $scope.originalUser.email) PL.email = $scope.user.email;
 
-			if ($scope.user.first !== $scope.originalUser.first) PL.first = $scope.user.first;
-			if ($scope.user.last !== $scope.originalUser.last) PL.last = $scope.user.last;
+			if ($scope.user.firstName !== $scope.originalUser.firstName) PL.firstName = $scope.user.firstName;
+			if ($scope.user.lastName !== $scope.originalUser.lastName) PL.lastName = $scope.user.lastName;
 
 			return PL;
 
@@ -148,7 +150,7 @@ const init = () => {
 			$mdBottomSheet.cancel();
 
 			$scope.payload = {
-				id: $scope.user.id,
+				_id: $scope.user._id,
 				action: 'delete'
 			};
 
@@ -163,19 +165,39 @@ const init = () => {
 
 		const submitData = payload => {
 
-			const req = {
-				method: 'POST',
-				url: `api/user/${payload.action}.php`,
+			const action = payload.action;
+
+			const request = {
+				url: '/users',
 				headers: {
-					'Accept': 'application/json',
-					'Content-Type': 'application/json'
-				},
-				data: payload
+					Accept: 'application/json',
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${$rootScope.user.token}`
+				}
 			};
 
-			$http(req).then( res => {
+			if (action === 'create') {
+				request.method = 'POST';
+				delete payload._id;
+			} else if (action === 'update') {
+				request.method = 'PATCH';
+				request.url += `/${payload._id}`;
+			} else if (action === 'delete') {
+				request.method = 'DELETE';
+				request.url += `/${payload._id}`;
+			}
 
-				if (res.status === 503) return false;
+			//clean payload
+			delete payload._id;
+			delete payload.id;
+			delete payload.action;
+			delete payload.invitation;
+
+			request.data = payload;
+
+			$http(request).then( res => {
+
+				if (res.status === 400 || res.status === 500) return false;
 
 				if (!res.data) {
 					$scope.showSimpleToastTag('An error occurred!');
@@ -184,9 +206,9 @@ const init = () => {
 
 				let msg;
 
-				if ($scope.payload.action === 'delete') {
+				if (action === 'delete') {
 					msg = 'User removed.';
-				} else if ($scope.payload.action === 'create') {
+				} else if (action === 'create') {
 					msg = 'User added.';
 					if ($scope.payload.invitation) msg += ' An invitation was sent by email.';
 				} else {
@@ -196,7 +218,10 @@ const init = () => {
 				$scope.showSimpleToastTag(msg);
 				
 				$scope.mdPanelRef.close();
-				$rootScope.$broadcast('userAction', res.data);
+				$rootScope.$broadcast('userAction', {
+					action,
+					data: res.data
+				});
 				
 
 			}, res => {

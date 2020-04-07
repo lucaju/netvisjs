@@ -24,17 +24,15 @@ const init = () => {
 
 			$scope.credentials.action = 'checkCredentials';
 
-			const req = {
+			$http({
 				method: 'POST',
-				url: 'api/user/login.php',
+				url: '/users/login',
 				headers: {
 					'Accept': 'application/json',
 					'Content-Type': 'application/json'
 				},
 				data: $scope.credentials
-			};
-
-			$http(req).then( res => {
+			}).then( res => {
 
 				if (!res.data) return;
 				if (res.data.error)  {
@@ -57,17 +55,15 @@ const init = () => {
 
 			$scope.forgot.action = 'reset';
 
-			const req = {
+			$http({
 				method: 'POST',
-				url: 'api/user/recover_password.php',
+				url: 'users/forgotPassword',
 				headers: {
 					'Accept': 'application/json',
 					'Content-Type': 'application/json'
 				},
 				data: $scope.forgot
-			};
-
-			$http(req).then( res => {
+			}).then( res => {
 
 				if (!res.data) {
 					$scope.forgot.error = 'Unable to process your request';

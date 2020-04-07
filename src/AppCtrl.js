@@ -85,44 +85,44 @@ const init = () => {
 		//................
 
 		//TEST IF DB CONENCTION IS WORKING
-		$http.get('api/shared/test_db.php').then( res => {
-			if (res.status !== 200) {
-				window.location.assign(`${window.location}install/install.html`);
-			}
-		}, res => {
-			window.location.assign(`${window.location}install/install.html`);
-		});
+		// $http.get('api/shared/test_db.php').then( res => {
+		// 	if (res.status !== 200) {
+		// 		window.location.assign(`${window.location}install/install.html`);
+		// 	}
+		// }, res => {
+		// 	window.location.assign(`${window.location}install/install.html`);
+		// });
 
 		//get meta -- define title
-		$http.get('api/meta/read.php').then( res => {
-			if (res.status !== 200) {
-				$rootScope.project.title = 'Network Visualization';
-			}
-			
-			$rootScope.project = res.data.project;
+		$http.get('/meta').then( res => {
+			if (res.status !== 200) $rootScope.project.title = 'Network Visualization';
+
+			$rootScope.project = res.data;
 			document.title = $rootScope.project.title;
 
-		}, res => {
+		}, error => {
 			$rootScope.project.title = 'Network Visualization';
 		});
 
 		//................
 
-		$scope.init = () => {
-			$scope.guestLogin();
-		};
+		$scope.init = () => $scope.guestLogin();
 		
 		//guest login
 		$scope.guestLogin = () => {
 			$scope.user = {
 				id: 'guest',
-				logged: false,
-				credentials: null,
+				email: null,
+				firstName:'guest',
+				token: null,
 				level: 2,
+				// credentials: user,
+				// logged: true,
 			};
 
-			loadNodesData();
+			$rootScope.user = $scope.user;
 
+			loadNodesData();
 			$rootScope.$broadcast('userSigned', $scope.user);
 		};
 
@@ -169,33 +169,59 @@ const init = () => {
 		});
 
 		//user login
-		$scope.$on('credentials_accepted', (event, data) => {
+		$scope.$on('credentials_accepted', (event, {user,token}) => {
 
 			if ($scope.infoPanel) $scope.infoPanel.close();
 
 			$scope.user = {
-				id: data.id,
+				id: user._id,
+				email: user.email,
+				firstName: user.firstName,
+				token: token,
+				level: user.level,
+				// credentials: user,
 				logged: true,
-				credentials: data,
-				level: data.level
 			};
 
 			if ($scope.dataNodes.length == 0) loadNodesData();
 
 			// $rootScope.$emit('userSigned', $scope.user);
-			$rootScope.$broadcast('userSigned', $scope.user);
+			$rootScope.user = $scope.user;
 
+			$rootScope.$broadcast('userSigned', $scope.user);
+			
 		});
 
 		$scope.logout = () => {
-			$scope.user = {
+
+
+			const defaultUser = {
 				id: 'guest',
-				logged: false,
-				credentials: null,
+				email: null,
+				firstName:'guest',
+				token: null,
 				level: 2,
+				// credentials: user,
+				// logged: true,
 			};
 
-			$rootScope.$broadcast('userSigned', $scope.user);
+			$http({
+				method: 'POST',
+				url: 'users/logout',
+				headers: {
+					Authorization: `Bearer ${$rootScope.user.token}`,
+				},
+			}).then( () => {
+				$scope.user = defaultUser;
+				$rootScope.user = $scope.user;
+				$rootScope.$broadcast('userSigned', $scope.user);
+
+			}, () => {
+				$scope.user = defaultUser;
+				$rootScope.user = $scope.user;
+				$rootScope.$broadcast('userSigned', $scope.user);
+			});
+			
 		};
 
 		/* Check user Level
@@ -241,10 +267,9 @@ const init = () => {
 		//................
 
 		const loadNodesData = () => {
-			$http.get('api/node/read.php').then( res => {
+			$http.get('/nodes').then( res => {
 	
 				if (res.status !== 200) {
-					// console.log(res);
 					$scope.emptyCanvas.message = 'No tags available';
 					if ($scope.checkUserLevel(1)) $scope.emptyCanvas.message += '<br/> Add one to start';
 					return [];
@@ -259,7 +284,7 @@ const init = () => {
 					node.weight = 0;
 					node.selected = false;
 
-					const nodeDate = DateTime.fromSQL(node.date);
+					const nodeDate = DateTime.fromISO(node.createdAt);
 					
 					//check modified time/date. Less than 5 minutes mark as new
 					const diff = now.diff(nodeDate, 'minute');
@@ -271,21 +296,17 @@ const init = () => {
 
 				$rootScope.$broadcast('dataLoaded');
 
-			}, res => {
-				console.log(res);
+			}, error => {
+				console.log(error);
 			});
 		};
 
 
-		$scope.initSettings = () => {
-			$rootScope.$broadcast('loadSettings', $scope.user);
-		};
+		$scope.initSettings = () => $rootScope.$broadcast('loadSettings', $scope.user);
 
-		$scope.changeTabSelection = elem => {
-			$scope.tabTagsActive = false;
-		};
+		$scope.changeTabSelection = () => $scope.tabTagsActive = false;
 
-		$scope.$on('importData', event => {
+		$scope.$on('importData', () => {
 			$scope.netVis = {
 				select: false,
 				researchers: [],

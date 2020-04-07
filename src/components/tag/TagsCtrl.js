@@ -176,15 +176,15 @@ const init = () => {
 
 		const loadInfoTag = id => {
 
-			$http.get(`api/node/read_one.php?id=${id}`).then( res => {
+			$http.get(`/nodes/${id}`).then( res => {
 
 				if (res.status !== 200) return false;
 
 				const node = res.data;
 				showTagInfoPanelWithData(node);
 
-			}, res => {
-				console.log(res);
+			}, error => {
+				console.log(error);
 			});
 		};
 
@@ -313,40 +313,33 @@ const init = () => {
 
 			// $scope.infoPanel = $mdPanel.create(config);
 			// $scope.infoPanel.open()
-
 		};
 
 		// ***********************
 
-		$scope.$on('CloseTagInfoEditPanel', (event, data) => {
-
+		$scope.$on('CloseTagInfoEditPanel', (event, res) => {
 			$scope.infoPanel = null;
 
-			if (data !== undefined) {
-
+			if (res !== undefined) {
 				//update views
-				if (data.action === 'created') {
-					addTagToList(data);
-				} else if (data.action === 'updated') {
-					updateTagOnList(data);
-				} else if (data.action === 'deleted') {
-					deleteTagOnList(data);
+				if (res.action === 'add') {
+					addTagToList(res.data); //add data to collection
+				} else if (res.action === 'update') {
+					updateTagOnList(res.data);
+				} else if (res.action === 'remove') {
+					deleteTagOnList(res.data);
 				}
 			}
 
 		});
 
 		const addTagToList = data => {
-
-			//add data to collection
 			data.weight = 0;
 			data.selected = false;
 			data.new = true;
 
 			$scope.dataNodes.push(data);
-
 			$scope.showTagInfoPanel(data);
-
 		};
 
 		const updateTagOnList = data => {
@@ -376,13 +369,11 @@ const init = () => {
 
 		};
 
-		const deleteTagOnList = ({id}) => {
-
-			const tag = getTagById(id);
+		const deleteTagOnList = ({_id}) => {
+			const tag = getTagById(_id);
 			const index = $scope.dataNodes.indexOf(tag);
 			$rootScope.$broadcast('listTagDeselected', tag);
 			$scope.dataNodes.splice(index, 1);
-
 		};
 
 		const getTagById = tagID => $scope.dataNodes.find( node => node.id === tagID);

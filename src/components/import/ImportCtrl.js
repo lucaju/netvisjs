@@ -8,13 +8,13 @@ const init = () => {
 	app.controller('ImportCtrl', ($scope, $rootScope, $http, $mdToast) => {
 
 		// html
-		$scope.fileExtensionOptions  = ['json','csv'];
-		$scope.fileExtension = $scope.fileExtensionOptions[0];
+		$scope.fileTypes  = ['json','csv'];
+		$scope.fileExtension = $scope.fileTypes[0];
 
-		$scope.csvDataStructureOptions = ['node','edge'];
-		$scope.csvDataStructure = $scope.csvDataStructureOptions[0];
+		$scope.dataTypes = ['node','relations'];
+		$scope.dataType = $scope.dataTypes[0];
 
-		$scope.changeCSVDataStructure = value => $scope.csvDataStructure = value;
+		$scope.changeDataType = value => $scope.dataType = value;
 
 		let file;
 		$scope.fileName;
@@ -52,8 +52,8 @@ const init = () => {
 						if (res.data.length > 0) {
 							submitData({
 								data: res.data,
-								dataType: file.type,
-								csvData: $scope.csvDataStructure
+								fileType: file.type,
+								dataType: $scope.dataType,
 							});
 						} else {
 							$scope.importResults = {error: true};
@@ -69,6 +69,8 @@ const init = () => {
 
 			} else if (file.type === 'application/json') {
 
+				$scope.dataType = 'node';
+
 				const reader = new FileReader();
 				reader.readAsText(file, 'UTF-8');
 
@@ -77,12 +79,12 @@ const init = () => {
 					const data = JSON.parse(content);
 					submitData({
 						data,
-						dataType: file.type
+						fileType: file.type,
+						dataType: $scope.dataType,
 					});
 				};
 
 				reader.onerror = res => {
-					console.log(res);
 					$scope.showSimpleToastTag('An error occurred!');
 				};
 
@@ -96,17 +98,16 @@ const init = () => {
 
 		const submitData = payload => {
 
-			const req = {
+			$http({
 				method: 'POST',
-				url: 'api/node/create_many.php',
+				url: '/nodes/import',
 				headers: {
-					'Accept': 'application/json',
-					'Content-Type': 'application/json'
+					Accept: 'application/json',
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${$rootScope.user.token}`
 				},
 				data: payload
-			};
-
-			$http(req).then( res => {
+			}).then( res => {
 
 				file = null;
 				
@@ -117,7 +118,6 @@ const init = () => {
 				$scope.showSimpleToastTag('Import succeded.');
 
 			}, res => {
-				console.log(res);
 				$scope.showSimpleToastTag('An error occurred!');
 				file = null;
 			});
