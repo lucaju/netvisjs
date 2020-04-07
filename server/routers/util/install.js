@@ -1,7 +1,7 @@
 const fs = require('fs-extra');
-const mongoDB = require('../db/mongoDB');
-const Meta = require('../models/meta');
-const User = require('../models/user');
+const mongoDB = require('../../db/mongoDB');
+const Meta = require('../../models/meta');
+const User = require('../../models/user');
 
 
 const install = async credentials => {
