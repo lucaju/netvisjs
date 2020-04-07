@@ -2,96 +2,103 @@ import {resetApp} from './AppResetConfig';
 
 const init = () => {
 	resetApp.controller('ResetCtrl', ($scope, $http) => {
-       
-		$scope.request = {
+
+		$scope.page = {
 			action: undefined,
 			userID: undefined,
-			reqID: undefined,
-			title: 'Reset Password',
+			token: undefined,
+			url: undefined,
+			title: 'NetVis',
+			header: 'Reset Password',
 			label: 'New Password',
 			status: 'loading'
 		};
-		
-		
-		$scope.getInitialData = ({action,requestID}) => {
 
-			$scope.request.action = action;
-			$scope.request.reqID = requestID;
+		const getQueryData = () => {
+			const data = {};
 
-			//change content if create
-			if ($scope.request.action === 'create') {
-				$scope.request.title = 'Create Password';
-				$scope.request.label = 'Password';
+			let searches = window.location.search;
+			searches = searches.substring(1, searches.length);
+			searches = searches.split('&');
+
+			for (let item of searches) {
+				item = item.split('=');
+				data[item[0]] = item[1];
 			}
 
-			$http.get(`../api/user/request_password_reset.php?requestID=${requestID}`).then(res => {
+			$scope.page.action = data.action;
+			$scope.page.userID = data._id;
+			$scope.page.token = data.token;
+		};
+
+		const updatePage = meta => {
+			$scope.page.title - meta.title;
+			$scope.page.url = meta.url;
+			document.title = $scope.page.title;
+		};
+
+		$scope.getInitialData = () => {
+
+			//get query data
+			getQueryData();
+
+			//change content if create
+			if ($scope.page.action === 'create') {
+				$scope.page.header = 'Create Password';
+				$scope.page.label = 'Password';
+			}
+
+			$http.get(`/reset/request?_id=${$scope.page.userID}&action=${$scope.page.action}&token=${$scope.page.token}`).then(res => {
 
 				if (!res.data) {
-					$scope.request.status = 'error';
-					if (res.data.error) $scope.request.error = res.data.error;
+					$scope.page.status = 'error';
+					if (res.data.error) $scope.page.error = res.data.error;
 					return;
 				}
 
-				if (res.data.expired) {
-					$scope.request.status = 'expired';
-					$scope.request.error = res.data.error;
-					return;
-				}
+				updatePage(res.data.meta);
 
-				if (res.data.error) {
-					$scope.request.status = 'error';
-					$scope.request.error = res.data.error;
-					return;
-				}
-				
-				$scope.request.status = 'editing';
-				$scope.request.userID = res.data.userID;
+				$scope.page.status = 'editing';
+				$scope.page.userID = res.data.user._id;
 
-			}, res => {
-				$scope.request.status = 'error';
-				$scope.request.error = res.data.error;
+			}, error => {
+
+				updatePage(error.data.meta);
+
+				$scope.page.status = error.data.status;
+				$scope.page.error = error.data.message;
 			});
 
 		};
-			
+
 		$scope.submit = () => {
 			const data = {
-				id: $scope.request.userID,
-				password: $scope.request.password
+				_id: $scope.page.userID,
+				password: $scope.page.password
 			};
 
-			const req = {
+			$http({
 				method: 'POST',
-				url: '../api/user/reset_password.php',
+				url: '/reset/reset',
 				headers: {
 					'Accept': 'application/json',
 					'Content-Type': 'application/json'
 				},
 				data: data
-			};
+			}).then(() => {
 
-			$http(req).then( res => {
-
-				if (!res.data) return;
-				if (res.data.error)  {
-					$scope.request.error = res.data.error;
-					return;
-				}
-
-				$scope.request.status = 'done';
+				$scope.page.status = 'done';
 
 				setTimeout(() => {
-					window.location.href = 'http://labs.fluxo.art.br/kias/';
+					window.location.href = $scope.page.url;
 				}, 6000);
-				
 
-			}, res => {
-				console.log(res);
-				if (res.data.error) $scope.credentials.error = res.data.error;
+			}, () => {
+				$scope.credentials.error = 'Unable to reset password.';
 			});
 
 		};
-		
+
 	});
 };
 

@@ -93,9 +93,10 @@ module.exports = {
 			inject: 'head'
 		}),
 		new HtmlWebpackPlugin({
-			template: './src/reset/reset-password.php',
-			filename: 'reset/reset-password.php',
+			template: './src/reset/reset.html',
+			filename: 'reset/index.html',
 			chunks: ['reset/reset'],
+			excludeChunks: [ 'app','install/app' ],
 			inject: 'head'
 		}),
 		new MiniCssExtractPlugin({

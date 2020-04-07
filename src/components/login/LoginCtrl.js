@@ -43,9 +43,9 @@ const init = () => {
 				$scope.credentials = res.data;
 				$rootScope.$broadcast('credentials_accepted', res.data);
 
-			}, res => {
-				if (res.data.error)  {
-					$scope.credentials.error = res.data.error;
+			}, error => {
+				if (error.data.error)  {
+					$scope.credentials.error = error.data.error;
 				}
 			});
 
@@ -57,7 +57,7 @@ const init = () => {
 
 			$http({
 				method: 'POST',
-				url: 'users/forgotPassword',
+				url: '/users/forgotPassword',
 				headers: {
 					'Accept': 'application/json',
 					'Content-Type': 'application/json'
@@ -65,29 +65,15 @@ const init = () => {
 				data: $scope.forgot
 			}).then( res => {
 
-				if (!res.data) {
-					$scope.forgot.error = 'Unable to process your request';
-					return;
-				}
-
-				if (res.data.error)  {
-					$scope.forgot.error = res.data.error;
-					return;
-				}
-
 				$scope.forgot.error = null;
 				$scope.forgot.success = true;
 				$scope.forgot.msg = res.data.message;
 				$scope.forgotPassword(false);
 
-			}, res => {
-				console.log(res);
+			}, error => {
 				$scope.forgot.success = false;
-				if (res.data && res.data.error)  {
-					$scope.forgot.error = res.data.error;
-					return;
-				}
 				$scope.forgot.error = 'Unable to process your request';
+				if (error.status === 404) $scope.forgot.error = 'Email not found.';
 			});
 
 		};

@@ -10,12 +10,12 @@ const welcomeEmail = (meta, user) => {
         </head>
 
         <body style='margin:0;
-                    padding:0;
-                    font-family:Helvetica, Arial, sans-serif;
-                    font-size:14px;
-                    font-weight:400;
-                    color:#374550;
-                    text-align:left;'
+            padding:0;
+            font-family:Helvetica, Arial, sans-serif;
+            font-size:14px;
+            font-weight:400;
+            color:#374550;
+            text-align:left;'
             bgcolor='#F0F0F0'
             leftmargin='0'
             topmargin='0'
@@ -39,58 +39,59 @@ const welcomeEmail = (meta, user) => {
                         cellspacing='0'
                         class='container'
                         style='width:600px;
-                                max-width:600px'>
+                        max-width:600px'>
 
                     <tr>
                         <td align='left'
                             style='padding-left:24px;'>
                         <p style='text-align:left;
-                                    font-weight:400;
-                                    font-size:20px;
-                                    color:#666666'>${meta.title}</p>
+                            font-weight:400;
+                            font-size:20px;
+                            color:#666666'>${meta.title}</p>
                         </td>
                     </tr>
 
                     <tr>
                     <td align='left'
                         style='padding-left:24px;
-                                padding-right:24px;
-                                padding-top:12px;
-                                padding-bottom:12px;
-                                background-color:#ffffff;
-                                border: 1px solid #e3e3e3; '>
+                        padding-right:24px;
+                        padding-top:12px;
+                        padding-bottom:12px;
+                        background-color:#ffffff;
+                        border: 1px solid #e3e3e3; '>
                         
                         <p class='title'
-                        style='font-size:18px;
-                                font-weight:600;
-                                color:#374550'>Hello ${user.name}.</p>
+                            style='font-size:18px;
+                            font-weight:600;
+                            color:#374550'>Hello ${user.name}.</p>
 
                         
                         <p style='font-family:Helvetica, Arial, sans-serif;
-                                    font-size:14px;
-                                    line-height:20px;
-                                    text-align:left;
-                                    color:#333333;
-                                    line-height:22px;'>You have been invited to <b>${meta.title}</b>. Use your email (${user.email}) to sign in.</p><br>
+                            font-size:14px;
+                            line-height:20px;
+                            text-align:left;
+                            color:#333333;
+                            line-height:22px;'>You have been invited to <b>${meta.title}</b>. Use your email (${user.email}) to sign in.</p><br>
 
                         <table border='0'
-                                width='180'
-                                cellpadding='0'
-                                cellspacing='0'
-                                style='width:180px;
-                                        max-width:180px;
-                                        background-color:#EF6C00;
-                                        color:#ffffff'>
+                            width='180'
+                            cellpadding='0'
+                            cellspacing='0'
+                            style='width:180px;
+                            max-width:180px;
+                            background-color:#EF6C00;
+                            color:#ffffff'>
                             <tr>
                             <td align='left'
                                 style='padding-left:24px;
-                                        padding-right:24px;
-                                        padding-top:12px;
-                                        padding-bottom:12px;'>
-                                <a href='${meta.url}/users/resetPassword?action=create&requestToken=${user.pwdToken}'
-                                target='_blank'
-                                style='color:#ffffff;
-                                text-decoration: none;'>Click here to access</a>
+                                padding-right:24px;
+                                padding-top:12px;
+                                padding-bottom:12px;'>
+                                       
+                                <a href='${meta.url}/reset?_id=${user._id}&action=create&token=${user.pwdToken}'
+                                    target='_blank'
+                                    style='color:#ffffff;
+                                    text-decoration: none;'>Click here to access</a>
                             </td>
                             </tr>
 
@@ -104,14 +105,14 @@ const welcomeEmail = (meta, user) => {
                     <tr>
                     <td align='left'
                         style='padding-left:24px;
-                                padding-right:24px;
-                                padding-top:12px;
-                                padding-bottom:12px;
-                                color:#666666;'>
+                            padding-right:24px;
+                            padding-top:12px;
+                            padding-bottom:12px;
+                            color:#666666;'>
                         <p style='text-align:left;
-                                font-size:12px;
-                                font-weight:400;
-                                line-height:18px;'>
+                            font-size:12px;
+                            font-weight:400;
+                            line-height:18px;'>
                             <strong>${meta.title}</strong></br>
                             <a href='${meta.url}' style='color:#555555;'>${meta.url}</a>
                         </p>
@@ -143,12 +144,12 @@ const passwordResetEmail = (meta, user) => {
         </head>
 
         <body style='margin:0;
-                    padding:0;
-                    font-family:Helvetica, Arial, sans-serif;
-                    font-size:14px;
-                    font-weight:400;
-                    color:#374550;
-                    text-align:left;'
+            padding:0;
+            font-family:Helvetica, Arial, sans-serif;
+            font-size:14px;
+            font-weight:400;
+            color:#374550;
+            text-align:left;'
             bgcolor='#F0F0F0'
             leftmargin='0'
             topmargin='0'
@@ -167,63 +168,64 @@ const passwordResetEmail = (meta, user) => {
                 <br>
                 
                 <table border='0'
-                        width='600'
-                        cellpadding='0'
-                        cellspacing='0'
-                        class='container'
-                        style='width:600px;
-                                max-width:600px'>
+                    width='600'
+                    cellpadding='0'
+                    cellspacing='0'
+                    class='container'
+                    style='width:600px;
+                    max-width:600px'>
 
                     <tr>
                         <td align='left'
                             style='padding-left:24px;'>
                         <p style='text-align:left;
-                                    font-weight:400;
-                                    font-size:20px;
-                                    color:#666666'>${meta.title}</p>
+                            font-weight:400;
+                            font-size:20px;
+                            color:#666666'>${meta.title}</p>
                         </td>
                     </tr>
 
                     <tr>
                     <td align='left'
                         style='padding-left:24px;
-                                padding-right:24px;
-                                padding-top:12px;
-                                padding-bottom:12px;
-                                background-color:#ffffff;
-                                border: 1px solid #e3e3e3;'>
+                        padding-right:24px;
+                        padding-top:12px;
+                        padding-bottom:12px;
+                        background-color:#ffffff;
+                        border: 1px solid #e3e3e3;'>
                         
                         <p class='title'
                         style='font-size:18px;
-                                font-weight:600;
-                                color:#374550'>Hello ${user.name}.</p>
+                            font-weight:600;
+                            color:#374550'>Hello ${user.name}.</p>
 
                         <p style='font-family:Helvetica, Arial, sans-serif;
-                                    font-size:14px;
-                                    line-height:20px;
-                                    text-align:left;
-                                    color:#333333;
-                                    line-height:22px;'>We've received a request to recover your password to access <b>${meta.title}</b>.
-                                    If you didn't make the request, just ignore this email. Otherwise you can reset your password using this link:</p><br>
+                            font-size:14px;
+                            line-height:20px;
+                            text-align:left;
+                            color:#333333;
+                            line-height:22px;'>We've received a request to recover your password to access <b>${meta.title}</b>.
+                            If you didn't make the request, just ignore this email. Otherwise you can reset your password using this link:</p><br>
 
                         <table border='0'
-                                width='260'
-                                cellpadding='0'
-                                cellspacing='0'
-                                style='width:260px;
-                                        max-width:260px;
-                                        background-color:#EF6C00;
-                                        color:#ffffff'>
+                            width='260'
+                            cellpadding='0'
+                            cellspacing='0'
+                            style='width:260px;
+                            max-width:260px;
+                            background-color:#EF6C00;
+                            color:#ffffff'>
                             <tr>
                             <td align='left'
                                 style='padding-left:24px;
-                                        padding-right:24px;
-                                        padding-top:12px;
-                                        padding-bottom:12px;'>
-                                <a href='${meta.url}/reset?action=reset&requestToken=${user.pwdToken}'
-                                target='_blank'
-                                style='color:#ffffff;
-                                text-decoration: none;'>Click here to reset your password</a>
+                                padding-right:24px;
+                                padding-top:12px;
+                                padding-bottom:12px;'>
+                                
+                                <a href='${meta.url}/reset?_id=${user._id}&action=reset&token=${user.pwdToken}'
+                                    target='_blank'
+                                    style='color:#ffffff;
+                                    text-decoration: none;'>Click here to reset your password</a>
                             </td>
                             </tr>
 
@@ -237,14 +239,14 @@ const passwordResetEmail = (meta, user) => {
                     <tr>
                     <td align='left'
                         style='padding-left:24px;
-                                padding-right:24px;
-                                padding-top:12px;
-                                padding-bottom:12px;
-                                color:#666666;'>
+                        padding-right:24px;
+                        padding-top:12px;
+                        padding-bottom:12px;
+                        color:#666666;'>
                         <p style='text-align:left;
-                                font-size:12px;
-                                font-weight:400;
-                                line-height:18px;'>
+                            font-size:12px;
+                            font-weight:400;
+                            line-height:18px;'>
                             <strong>${meta.title}</strong></br>
                             <a href='${meta.url}' style='color:#555555;'>${meta.url}</a>
                         </p>

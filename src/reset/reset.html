@@ -1,0 +1,86 @@
+<!doctype html>
+<html ng-app="resetApp">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>NetVis</title>
+
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+        <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicon-16x16.png">
+    </head>
+    <body ng-controller="ResetCtrl as resetCtrl"
+        ng-init="getInitialData()">
+
+        <md-content md-theme="appTheme" >
+
+            <div id="main" flex="auto">
+                <div id="main-top">
+                    <div id="title" layout-padding>
+                        <h2 class="md-title">
+                            {{page.title}}
+                        </h2>   
+                    </div>
+                </div>
+            </div>
+
+            <div class="loader"
+                layout="row"
+                layout-sm="column"
+                layout-align="space-around"
+                ng-if="page.status == 'loading'">
+                <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+            </div>
+
+            <section ng-if="page.status == 'editing'">
+                <h1 class="md-headline">{{page.header}}</h1>
+                
+                <form class="md-whiteframe-1dp">
+                    <div layout="column">
+                        <md-input-container class="input-custom">
+                            <label>{{page.label}}</label>
+                            <input type="password"
+                                ng-model="page.password"
+                                aria-label="Password">
+                        </md-input-container>
+                    </div>
+                </form>
+
+                <md-button type="submit"
+                    ng-click="submit()"
+                    aria-label="Submit">Submit</md-button>
+            </section>
+
+            <section ng-if="page.status == 'error'">
+                <div id="message"
+                    ng-if="page.error"
+                    flex="100">
+                        <md-divider></md-divider>
+                    <p class="md-caption">
+                        <md-icon md-font-icon="material-icons md-18">warning</md-icon>
+                        {{page.error}}
+                    </p>
+                </div>
+            </section>
+
+            <section ng-if="page.status == 'expired'">
+                <h1 class="md-headline">This session is expired.</h1>
+            </section>
+
+            <section id="success" ng-if="page.status == 'done'">
+                <md-icon md-font-icon="material-icons checked md-warn md-hue-1">check</md-icon>
+                <p class="md-body-1"><strong>All done!</strong><br/>
+                Use your email and password to access the website.</p>
+                <md-button href="{{page.url}}"
+                    class="md-fab md-mini md-primary"
+                    title="{{page.title}}">
+                    <md-icon md-font-icon="material-icons">arrow_forward</md-icon>
+                </md-button>
+            </section>
+                    
+        </md-content>
+
+    </body>
+
+</html>

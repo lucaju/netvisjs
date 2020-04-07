@@ -1,5 +1,4 @@
 const express = require('express');
-const {DateTime} = require('luxon');
 
 const auth = require('../middleware/auth');
 const User = require('../models/user');
@@ -85,7 +84,7 @@ router.post('/', async (req, res) => {
 
 		//send email.
 		await sendWelcomeEmail({
-			_id: user.id,
+			_id: user._id,
 			email: user.email,
 			name: user.fullName(),
 			pwdToken
@@ -265,70 +264,29 @@ router.post('/logoutAll', auth, async (req, res) => {
  * post/forgotPassword
  */
 router.post('/forgotPassword', async (req, res) => {
-	//find user
+	console.log(req.body);
+	// find user
 	const user = await User.findByEmail(req.body.email)
 		.catch((error) => {
 			res.status(404).send(error);
 		});
 
-	//create password token
-	const pwdToken = await user.generatePwdToken();
+	// create password token
+	try {
+		const pwdToken = await user.generatePwdToken();
 
-	//send email
-	await sendPasswordResetEmail({
-		_id: user.id,
-		email: user.email,
-		name: user.fullName(),
-		pwdToken
-	});
-
-	res.status(200).send();
-
-});
-
-/**
- * POST Reset Password
- * 
- * @async
- * @function
- * @param {String} req.params.id User id
- * @param {String} req.params.token User token
- * @returns {Object} res.body - User
- * @example
- * post/resetPassword/:id/:token
- */
-router.get('/resetPassword/:id/:token', async (req, res) => {
-	//find user
-	const user = await User.findById(req.params.id)
-		.catch((error) => {
-			res.status(404).send(error);
+		//send email
+		await sendPasswordResetEmail({
+			_id: user.id,
+			email: user.email,
+			name: user.fullName(),
+			pwdToken
 		});
-
-	//find token
-	const passwordReset = user.passwordResetTokens.find(pr => {
-		if (pr.token === req.params.token && pr.used === false) return pr;
-	});
-
-	//Token not found or already used
-	if (passwordReset === undefined) {
-		return res.status(404).send('Token expired or not found');
+	
+		res.status(200).send();
+	} catch(error) {
+		res.status(500);
 	}
-
-	//Token expires in X days
-	const now = DateTime.utc();
-	const tokenDate = DateTime.fromJSDate(passwordReset.date);
-	const diffInDays = now.diff(tokenDate, 'days');
-
-	//if tokens has more than 5 days
-	if (diffInDays.toObject().days > 5) {
-		return res.status(400).send('Token expired');
-	}
-
-	//ok, mark token as used
-	await user.usePwdToken(req.params.token);
-
-	//pass user info to the interface
-	res.status(200).send(user);
 });
 
 module.exports = router;
