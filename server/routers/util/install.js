@@ -2,6 +2,7 @@ const fs = require('fs-extra');
 const mongoDB = require('../../db/mongoDB');
 const Meta = require('../../models/meta');
 const User = require('../../models/user');
+const {sendWelcomeEmail} = require('../../emails/account');
 
 
 const install = async credentials => {
@@ -24,8 +25,8 @@ JWT_SECRET='19ma7mYU1pNhJM8p6zSyqI1MsOfH4CM7aHnICI1N35FsoeHyupTdULqBSPztzE8`;
     process.env.MONGODB_HOST = credentials.db.host;
     process.env.MONGODB_PORT = credentials.db.port;
     process.env.MONGODB_DATABASE = credentials.db.database;
-    process.env.JWT_SECRET='19ma7mYU1pNhJM8p6zSyqI1MsOfH4CM7aHnICI1N35FsoeHyupTdULqBSPztzE8';
-    
+    process.env.JWT_SECRET = '19ma7mYU1pNhJM8p6zSyqI1MsOfH4CM7aHnICI1N35FsoeHyupTdULqBSPztzE8';
+
     //C. Connect MongoDB
     mongoDB.connect();
 
@@ -59,8 +60,16 @@ JWT_SECRET='19ma7mYU1pNhJM8p6zSyqI1MsOfH4CM7aHnICI1N35FsoeHyupTdULqBSPztzE8`;
         });
 
 
-    const token = await user.generateAuthToken();
-    // sendWelcomeEmail(user.email, user.name)
+    //create password token
+    const pwdToken = await user.generatePwdToken();
+
+    //send email.
+    await sendWelcomeEmail({
+        _id: user.id,
+        email: user.email,
+        name: user.fullName(),
+        pwdToken
+    });
 
     return meta;
 };

@@ -1,9 +1,13 @@
 const express = require('express');
-const {DateTime} = require ('luxon');
+const {DateTime} = require('luxon');
 
 const auth = require('../middleware/auth');
 const User = require('../models/user');
-
+const {
+	sendWelcomeEmail,
+	sendPasswordResetEmail,
+	// sendCancelationEmail
+} = require('../emails/account');
 
 const router = new express.Router();
 router.use(express.json());
@@ -44,11 +48,13 @@ router.get('/:id', auth, async (req, res) => {
  * get/
  */
 router.get('/', auth, async (req, res) => {
-	const users = await User.find().sort({firstName: 'asc'})
-		.catch( (error) => {
+	const users = await User.find().sort({
+			firstName: 'asc'
+		})
+		.catch((error) => {
 			res.status(500).send(error);
 		});
-	
+
 	if (!users) res.status(404).send();
 
 	res.status(200).send(users);
@@ -70,16 +76,24 @@ router.get('/', auth, async (req, res) => {
  * }
  */
 router.post('/', async (req, res) => {
-    try {
+	try {
 		const user = new User(req.body);
 		await user.save();
 
-		// const token = await user.generateAuthToken();
-		// sendWelcomeEmail(user.email, user.name)
-        
-        res.status(201).send(user);
-    } catch (error) {
-        res.status(400).send(error);
+		//create password token
+		const pwdToken = await user.generatePwdToken();
+
+		//send email.
+		await sendWelcomeEmail({
+			_id: user.id,
+			email: user.email,
+			name: user.fullName(),
+			pwdToken
+		});
+
+		res.status(201).send(user);
+	} catch (error) {
+		res.status(400).send(error);
 	}
 });
 
@@ -105,11 +119,13 @@ router.patch('/:id', auth, async (req, res) => {
 	const updates = Object.keys(req.body);
 	const allowedUpdates = ['firstName', 'lastName', 'email', 'password', 'level'];
 	const isValidOperation = updates.every((update) => allowedUpdates.includes(update));
-	
-	const passwordUpdate = allowedUpdates.find( type => type === 'password');
+
+	const passwordUpdate = allowedUpdates.find(type => type === 'password');
 
 	if (!isValidOperation) {
-		return res.status(400).send({ error: 'Invalid updates!' });
+		return res.status(400).send({
+			error: 'Invalid updates!'
+		});
 	}
 
 	try {
@@ -150,8 +166,17 @@ router.delete('/:id', auth, async (req, res) => {
 			user = await User.findById(req.params.id);
 		}
 
-		await User.deleteOne({_id: user.id});
-		// sendCancelationEmail(req.user.email, req.user.name)
+		//delete
+		await User.deleteOne({
+			_id: user.id
+		});
+
+		//send email
+		// await sendCancelationEmail({
+		// 	_id: user.id,
+		// 	email: user.email, 
+		// 	name: user.fullName(),
+		// });
 
 		res.status(200).send(user);
 
@@ -178,11 +203,14 @@ router.delete('/:id', auth, async (req, res) => {
 router.post('/login', async (req, res) => {
 	try {
 		const user = await User.findByCredentials(req.body.email, req.body.password);
-        const token = await user.generateAuthToken();
-        res.status(200).send({user, token});
-    } catch (e) {
-        res.status(400).send();
-    }
+		const token = await user.generateAuthToken();
+		res.status(200).send({
+			user,
+			token
+		});
+	} catch (e) {
+		res.status(400).send();
+	}
 });
 
 /**
@@ -243,8 +271,16 @@ router.post('/forgotPassword', async (req, res) => {
 			res.status(404).send(error);
 		});
 
-	const token = await user.generatePwdToken();
-	// sendResetPasswordEmail(user.id, user.email, token)
+	//create password token
+	const pwdToken = await user.generatePwdToken();
+
+	//send email
+	await sendPasswordResetEmail({
+		_id: user.id,
+		email: user.email,
+		name: user.fullName(),
+		pwdToken
+	});
 
 	res.status(200).send();
 
@@ -269,7 +305,7 @@ router.get('/resetPassword/:id/:token', async (req, res) => {
 		});
 
 	//find token
-	const passwordReset = user.passwordResetTokens.find( pr => {
+	const passwordReset = user.passwordResetTokens.find(pr => {
 		if (pr.token === req.params.token && pr.used === false) return pr;
 	});
 

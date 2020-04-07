@@ -1,6 +1,6 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const {DateTime} = require ('luxon');
+const {DateTime} = require('luxon');
 const mongoose = require('mongoose');
 const validator = require('validator');
 
@@ -50,7 +50,7 @@ const userSchema = mongoose.Schema({
 			required: true
 		}
 	}],
-	passwordResetTokens:[{
+	passwordResetTokens: [{
 		token: {
 			type: String,
 			required: true
@@ -79,12 +79,21 @@ userSchema.methods.toJSON = function () {
 	return userObject;
 };
 
+userSchema.methods.fullName = function () {
+	const user = this;
+	let name = '';
+	if (user.firstName) name += user.firstName;
+	if (user.lasttName) name += user.lasttName;
+	return name;
+};
+
 userSchema.methods.generateAuthToken = async function () {
 	const user = this;
-	const token = jwt.sign({_id: user._id.toString()}, 'netvis');
-	// const token = jwt.sign({_id: user._id.toString()}, process.env.JWT_SECRET);
+	const token = jwt.sign({_id: user._id.toString()}, process.env.JWT_SECRET);
 
-	user.tokens = user.tokens.concat({token});
+	user.tokens = user.tokens.concat({
+		token
+	});
 	await user.save();
 
 	return token;
@@ -92,8 +101,7 @@ userSchema.methods.generateAuthToken = async function () {
 
 userSchema.methods.generatePwdToken = async function () {
 	const user = this;
-	const token = jwt.sign({_id: user._id.toString()}, 'netvis');
-	// const token = jwt.sign({_id: user._id.toString()}, process.env.JWT_SECRET);
+	const token = jwt.sign({_id: user._id.toString()}, process.env.JWT_SECRET);
 
 	const resetRequest = {
 		token,
@@ -109,11 +117,11 @@ userSchema.methods.generatePwdToken = async function () {
 
 userSchema.methods.usePwdToken = async function (token) {
 	const user = this;
-	const passwordReset = user.passwordResetTokens.find( pr => {
+	const passwordReset = user.passwordResetTokens.find(pr => {
 		if (pr.token === token) return pr;
 	});
 	passwordReset.used = true;
-	
+
 	await user.save();
 	return token;
 };
