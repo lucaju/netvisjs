@@ -11,7 +11,7 @@ const metaSchema = mongoose.Schema({
 	url: {
 		type: String,
 		required: true,
-        trim: true
+		trim: true
 	},
 	email: {
 		type: String,
@@ -27,9 +27,9 @@ const metaSchema = mongoose.Schema({
 	},
 	sendgridAPI: {
 		type: String,
-        required: true,
-        trim: true,
-        validate(value) {
+		required: true,
+		trim: true,
+		validate(value) {
 			if (validator.isEmpty(value)) {
 				throw new Error('sendgridAPI invalid');
 			}

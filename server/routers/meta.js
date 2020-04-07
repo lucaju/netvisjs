@@ -3,7 +3,7 @@ const express = require('express');
 const mongoDB = require('../db/mongoDB');
 const auth = require('../middleware/auth');
 const Meta = require('../models/meta');
-const install = require ('./util/install');
+const install = require('./util/install');
 
 const router = new express.Router();
 router.use(express.json());
@@ -49,9 +49,9 @@ router.post('/connect', async (req, res) => {
     });
 
     await mongoDB.close();
-    
+
     res.status(200).send();
-    
+
 });
 
 /**
@@ -102,7 +102,7 @@ router.post('/install', async (req, res) => {
         !req.body.user.password ||
         !req.body.meta.title ||
         !req.body.meta.sendgridAPI) {
-        
+
         return res.status(400).send({
             message: 'Connection failed. Data Incomplete.'
         });
@@ -139,8 +139,8 @@ router.post('/install', async (req, res) => {
  * get/title
  */
 router.get('/', async (req, res) => {
-	const meta = await Meta.findOne()
-		.catch( (error) => {
+    const meta = await Meta.findOne()
+        .catch((error) => {
             res.status(400).send(error);
         });
 
@@ -158,8 +158,8 @@ router.get('/', async (req, res) => {
  * get/title
  */
 router.get('/:prop', async (req, res) => {
-	const meta = await Meta.findOne()
-		.catch( (error) => {
+    const meta = await Meta.findOne()
+        .catch((error) => {
             res.status(400).send(error);
         });
 
@@ -167,7 +167,7 @@ router.get('/:prop', async (req, res) => {
     if (meta[req.params.prop] === undefined) {
         return res.status(400).send('Property not found');
     }
-    
+
     res.status(200).send(meta[req.params.prop]);
 });
 
@@ -207,19 +207,19 @@ router.post('/', async (req, res) => {
  * }
  */
 router.patch('/', auth, async (req, res) => {
-	const updates = Object.keys(req.body);
+    const updates = Object.keys(req.body);
 
-	try {
+    try {
         const meta = await Meta.findOne();
 
         updates.forEach((update) => meta[update] = req.body[update]);
         await meta.save();
 
-		res.status(200).send(meta);
+        res.status(200).send(meta);
 
-	} catch (error) {
-		res.status(400).send(error);
-	}
+    } catch (error) {
+        res.status(400).send(error);
+    }
 });
 
 
@@ -234,21 +234,21 @@ router.patch('/', auth, async (req, res) => {
  * delete/title
  */
 router.delete('/:prop', auth, async (req, res) => {
-	try {
+    try {
         const meta = await Meta.findOne();
-        
+
         //remove property;
-        const newMeta =  meta.toObject();
+        const newMeta = meta.toObject();
         delete newMeta[req.params.prop];
 
         await meta.overwrite(newMeta);
         await meta.save();
 
-		res.status(200).send(meta);
+        res.status(200).send(meta);
 
-	} catch (error) {
-		res.status(400).send(error);
-	}
+    } catch (error) {
+        res.status(400).send(error);
+    }
 });
 
 module.exports = router;

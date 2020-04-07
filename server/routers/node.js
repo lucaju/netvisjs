@@ -21,17 +21,17 @@ router.use(express.json());
  */
 router.get('/:id', async (req, res) => {
     const node = await Node.findById(req.params.id)
-        .catch (error => {
+        .catch(error => {
             res.status(500).send(error);
         });
 
     if (!node) return res.status(404).send();
 
-    await Node.populate(node,{
+    await Node.populate(node, {
         path: 'relations',
-        select: ['name','type','relations'],
+        select: ['name', 'type', 'relations'],
         model: 'Node'
-    }).catch (() => res.status(500).send());
+    }).catch(() => res.status(500).send());
 
     //hack: add property 'id' to the object for frontend consumptions 
     const nodeObject = node.toObject();
@@ -51,15 +51,17 @@ router.get('/:id', async (req, res) => {
  * get/type/:type
  */
 router.get('/type/:type', async (req, res) => {
-    const nodes = await Node.find({type: req.params.type})
-        .catch (error => {
+    const nodes = await Node.find({
+            type: req.params.type
+        })
+        .catch(error => {
             res.status(500).send(error);
         });
 
     if (!nodes) return res.status(404).send();
 
     //hack: add property 'id' to the object for frontend consumptions 
-    const nodeCollection = nodes.map( node => {
+    const nodeCollection = nodes.map(node => {
         const nodeObject = node.toObject();
         nodeObject.id = node._id;
         return nodeObject;
@@ -93,12 +95,11 @@ router.get('/', async (req, res) => {
 
     const nodes = await Node.find(
         match,
-        null,
-        {
+        null, {
             limit: parseInt(req.query.limit),
             skip: parseInt(req.query.skip),
         }
-    ).catch (error => {
+    ).catch(error => {
         res.status(500).send(error);
     });
 
@@ -108,16 +109,16 @@ router.get('/', async (req, res) => {
     //Get relations' data
     if (req.query.name || req.query.reldetails === 'true') {
         for (const node of nodes) {
-            await Node.populate(node,{
+            await Node.populate(node, {
                 path: 'relations',
-                select: ['name','type','relations'],
+                select: ['name', 'type', 'relations'],
                 model: 'Node'
             });
         }
     }
 
     //hack: add property 'id' to the object for frontend consumptions 
-    const nodeCollection = nodes.map( node => {
+    const nodeCollection = nodes.map(node => {
         const nodeObject = node.toObject();
         nodeObject.id = node._id;
         return nodeObject;
@@ -147,37 +148,39 @@ router.get('/', async (req, res) => {
  * }
  */
 router.post('/', auth, async (req, res) => {
-    
+
     //check if node exists
     let node = await findNode(req.body)
-        .catch (error => {
+        .catch(error => {
             res.status(500).send(error);
         });
 
     //update or update 
     if (node) {
-        return res.status(400).send({message: 'Node already exists'});
+        return res.status(400).send({
+            message: 'Node already exists'
+        });
 
         //alternativelly, we could update the node
         // node = await updateNode(node,req.body)
         //     .catch(error => res.status(500).send(error));
-            
+
         // res.status(200).send(node);
 
     } else {
-        
+
         node = await createNode(req.body)
             .catch(error => {
                 res.status(500).send(error);
             });
-        
+
         //hack: add property 'id' to the object for frontend consumptions 
         const nodeObject = node.toObject();
         nodeObject.id = node._id;
 
         res.status(201).send(nodeObject);
     }
-        
+
 });
 
 /**
@@ -201,22 +204,22 @@ router.post('/', auth, async (req, res) => {
 router.patch('/:id', auth, async (req, res) => {
     //fetch node
     let node = await findNode(req.params)
-        .catch (error => {
+        .catch(error => {
             res.status(500).send(error);
         });
-    
+
     //not found
     if (!node) return res.status(404).send();
 
     //update
     node = await updateNode(node, req.body)
-        .catch (error => {
+        .catch(error => {
             res.status(500).send(error);
         });
     //hack: add property 'id' to the object for frontend consumptions 
     const nodeObject = node.toObject();
     nodeObject.id = node._id;
-    
+
     res.status(200).send(nodeObject);
 });
 
@@ -234,10 +237,10 @@ router.delete('/:id', auth, async (req, res) => {
 
     //fetch node
     let node = await findNode(req.params)
-        .catch (error => {
+        .catch(error => {
             res.status(500).send(error);
         });
-    
+
     // not found
     if (!node) return res.status(404).send();
 
@@ -247,10 +250,10 @@ router.delete('/:id', auth, async (req, res) => {
 
     //delete node
     await deleteNode(node)
-        .catch (error => {
+        .catch(error => {
             res.status(500).send(error);
         });
-   
+
     res.status(200).send(nodeObject);
 });
 
@@ -277,7 +280,7 @@ router.post('/import', auth, async (req, res) => {
     }
 
     //hack: add property 'id' to the object for frontend consumptions 
-    collection = collection.map( node => {
+    collection = collection.map(node => {
         const nodeObject = node.toObject();
         nodeObject.id = node._id;
         return nodeObject;
@@ -289,7 +292,7 @@ router.post('/import', auth, async (req, res) => {
 
 //* Auxiliar Functions */
 
-const findNode = async ({id, name, type}) => {
+const findNode = async ({id,name,type}) => {
     let node;
 
     try {
@@ -300,10 +303,10 @@ const findNode = async ({id, name, type}) => {
         } else if (name) {
             node = await Node.findByName(name);
         }
-        
+
         return node;
 
-    } catch(error) {
+    } catch (error) {
         throw new Error(error);
     }
 };
@@ -311,7 +314,7 @@ const findNode = async ({id, name, type}) => {
 const createNode = async (data) => {
 
     if (data.relationToAdd) {
-         //translate relations to add
+        //translate relations to add
         data.relations = data.relationToAdd;
         delete data.relationToAdd; //delete attribute to avoid conflict
     }
@@ -325,19 +328,19 @@ const createNode = async (data) => {
 
         return node;
 
-    } catch(error) {
+    } catch (error) {
         throw new Error(error);
     }
-    
+
 };
 
 const updateNode = async (node, data) => {
     const updates = Object.keys(data);
 
-     //if relations to remove
-     if (data.relationToDelete) {
+    //if relations to remove
+    if (data.relationToDelete) {
         //filter out 
-        node.relations = node.relations.filter( rel => {
+        node.relations = node.relations.filter(rel => {
             if (!data.relationToDelete.includes(rel.toString())) return rel;
         });
 
@@ -351,30 +354,30 @@ const updateNode = async (node, data) => {
     //if relations to add
     if (data.relationToAdd) {
         //check for duplications
-        data.relationToAdd = data.relationToAdd.filter( rel => {
+        data.relationToAdd = data.relationToAdd.filter(rel => {
             if (!node.relations.includes(rel)) return rel;
         });
 
-         await addReciprocalRelations(node._id, data.relationToAdd);
-    
+        await addReciprocalRelations(node._id, data.relationToAdd);
+
         //add 
         node.relations = [...node.relations, ...data.relationToAdd];
-        
+
         //delete attribute to avoid conflict
         delete data.relationToAdd;
     }
 
     // //update other attributes 
     updates.forEach((update) => {
-        if(node[update] == undefined) {
+        if (node[update] == undefined) {
             node.set(update, data[update]);
         } else {
             node[update] = data[update];
         }
     });
-    
+
     node = await node.save()
-        .catch( error => {
+        .catch(error => {
             throw new Error(error);
         });
 
@@ -384,34 +387,40 @@ const updateNode = async (node, data) => {
 const deleteNode = async (node) => {
     try {
         //remove reference on other nodes
-        const relationships = await deleteReciprocalRelations(node._id, node.relations);
+        await deleteReciprocalRelations(node._id, node.relations);
 
         //remove node
         await node.remove();
 
         return node;
 
-    } catch(error) {
+    } catch (error) {
         throw new Error(error);
     }
 };
 
 const addReciprocalRelations = async (sourceID, relations) => {
     return await Node.updateMany({
-        _id: { 
+        _id: {
             $in: relations
-        }},{
-            $push: { relations: sourceID}
-        });
+        }
+    }, {
+        $push: {
+            relations: sourceID
+        }
+    });
 };
 
 const deleteReciprocalRelations = async (sourceID, relations) => {
     return await Node.updateMany({
-        _id: { 
+        _id: {
             $in: relations
-        }},{
-            $pull: { relations: sourceID}
-        });
+        }
+    }, {
+        $pull: {
+            relations: sourceID
+        }
+    });
 };
 
 module.exports = router;

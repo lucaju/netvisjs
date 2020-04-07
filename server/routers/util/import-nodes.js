@@ -18,7 +18,7 @@ const importNodes = async data => {
 
         //relations
         if (nodeData.relations) {
-            nodeData.relations = await addRelations(node,nodeData.relations);
+            nodeData.relations = await addRelations(node, nodeData.relations);
             node.relations = [...node.relations, ...nodeData.relations];
         }
 
@@ -31,7 +31,7 @@ const importNodes = async data => {
     return collection;
 };
 
-const addRelations = async (nodeSource,data) => {
+const addRelations = async (nodeSource, data) => {
 
     const relCollection = [];
 
@@ -80,7 +80,7 @@ const importRelation = async data => {
         if (!pair.source || !pair.sourceType || !pair.target || !pair.targetType) continue;
 
         //-----------check source
-        let nodeSource = await Node.findByNameType(pair.source,pair.sourceType)
+        let nodeSource = await Node.findByNameType(pair.source, pair.sourceType)
             .catch(error => {
                 throw new Error(error);
             });
@@ -122,7 +122,7 @@ const importRelation = async data => {
         //--- save both
         await nodeSource.save();
         await nodeTarget.save();
-        
+
         //collect both
         collection.push(nodeSource);
         collection.push(nodeTarget);

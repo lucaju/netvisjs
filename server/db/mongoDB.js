@@ -1,4 +1,3 @@
-
 const mongoose = require('mongoose');
 
 let mongoURI = `mongodb://${process.env.MONGODB_HOST}:${process.env.MONGODB_PORT}/${process.env.MONGODB_DATABASE}`;
@@ -6,14 +5,14 @@ let mongoURI = `mongodb://${process.env.MONGODB_HOST}:${process.env.MONGODB_PORT
 const connect = async (credentials) => {
 
 	//check credentials
-	if (!process.env.MONGODB_HOST
-        || !process.env.MONGODB_PORT
-		|| !process.env.MONGODB_DATABASE) {
+	if (!process.env.MONGODB_HOST ||
+		!process.env.MONGODB_PORT ||
+		!process.env.MONGODB_DATABASE) {
 
 		if (!credentials) {
 			throw new Error('Redirect to install');
 		}
-    } 
+	}
 
 	//check overwrite credentials
 	if (credentials) {
@@ -32,7 +31,7 @@ const connect = async (credentials) => {
 		throw new Error(error);
 	});
 
-	return true;	
+	return true;
 };
 
 const close = async () => await mongoose.connection.close();
