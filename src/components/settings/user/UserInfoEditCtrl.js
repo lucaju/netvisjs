@@ -37,7 +37,6 @@ const init = () => {
 		$scope.user = angular.copy(this.user);
 		$scope.originalUser = angular.copy(this.user);
 
-
 		//---------    
 
 		$scope.saveDisable = () => {
@@ -46,9 +45,8 @@ const init = () => {
 			return value;
 		};
 
-		$scope.generatePassword = () => {
-			$scope.user.password = generatePassword(12, false); //https://github.com/bermi/password-generator
-		};
+		//https://github.com/bermi/password-generator
+		$scope.generatePassword = () => $scope.user.password = generatePassword(12, false);
 
 		//---------- Save // Delete
 		$scope.saveUser = () => {
@@ -70,11 +68,7 @@ const init = () => {
 
 				//PASSWORD
 				if ($scope.action === 'create') {
-					if (!$scope.user.password) {
-						$scope.payload.password = generatePassword(12, false);
-					} else {
-						$scope.payload.password = $scope.user.password;
-					}
+					$scope.payload.password = generatePassword(12, false);
 				} else if ($scope.action === 'update') {
 					if (!$scope.user.password) $scope.payload.password = $scope.user.password;
 				}
@@ -109,7 +103,6 @@ const init = () => {
 			};
 
 			// --- checks
-
 			PL.level = $scope.user.level;
 			if ($scope.user.email !== $scope.originalUser.email) PL.email = $scope.user.email;
 
@@ -132,7 +125,7 @@ const init = () => {
 
 		};
 
-		$scope.deleteUser = ev => {
+		$scope.deleteUser = () => {
 			$scope.alert = '';
 			$mdBottomSheet.show({
 				templateUrl: 'components/dialog/bottom-sheet-confirm-delete-dialog.html',
@@ -145,7 +138,6 @@ const init = () => {
 		};
 
 		$scope.confirmDeleteTag = () => {
-
 			// Action
 			$mdBottomSheet.cancel();
 
@@ -155,13 +147,10 @@ const init = () => {
 			};
 
 			submitData($scope.payload);
-
 		};
 
-		$scope.cancelDialog = () => {
-			// Action
-			$mdBottomSheet.cancel();
-		};
+		// Actions
+		$scope.cancelDialog = () => $mdBottomSheet.cancel();
 
 		const submitData = payload => {
 
@@ -224,7 +213,7 @@ const init = () => {
 				});
 				
 
-			}, res => {
+			}, () => {
 				$scope.showSimpleToastTag('An error occurred!');
 			});
 		};
