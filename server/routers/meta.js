@@ -3,7 +3,7 @@ const express = require('express');
 const mongoDB = require('../db/mongoDB');
 const auth = require('../middleware/auth');
 const Meta = require('../models/meta');
-const install = require ('./install');
+const install = require ('./util/install');
 
 const router = new express.Router();
 router.use(express.json());
@@ -130,12 +130,30 @@ router.post('/install', async (req, res) => {
 
 
 /**
+ * GET Meta Properties
+ * 
+ * @async
+ * @function
+ * @returns {Object} res.body - Meta Properties
+ * @example
+ * get/title
+ */
+router.get('/', async (req, res) => {
+	const meta = await Meta.findOne()
+		.catch( (error) => {
+            res.status(400).send(error);
+        });
+
+    res.status(200).send(meta);
+});
+
+/**
  * GET Meta Property
  * 
  * @async
  * @function
- * @param {String} req.params.prop Matches  meta[prop] : Use 'all' to show all
- * @returns {Mixin} res.body - A meta Property or an array os properties
+ * @param {String} req.params.prop Matches  meta[prop]
+ * @returns {Object} res.body - A meta Property
  * @example
  * get/title
  */
@@ -145,16 +163,12 @@ router.get('/:prop', async (req, res) => {
             res.status(400).send(error);
         });
 
-    //if not all or prop doesn't exist
-    if (req.params.prop !== 'all' && meta[req.params.prop] === undefined) {
+    // if not all or prop doesn't exist
+    if (meta[req.params.prop] === undefined) {
         return res.status(400).send('Property not found');
     }
     
-    if(req.params.prop !== 'all') {
-        res.status(200).send(meta[req.params.prop]);
-    } else {
-        res.status(200).send(meta);
-    }
+    res.status(200).send(meta[req.params.prop]);
 });
 
 /**
