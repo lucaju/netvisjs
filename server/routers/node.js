@@ -19,7 +19,7 @@ router.use(express.json());
  * @example
  * get/:_id
  */
-router.get('/:id', auth, async (req, res) => {
+router.get('/:id', async (req, res) => {
     const node = await Node.findById(req.params.id)
         .catch (error => {
             res.status(500).send(error);
@@ -33,7 +33,11 @@ router.get('/:id', auth, async (req, res) => {
         model: 'Node'
     }).catch (() => res.status(500).send());
 
-    res.status(200).send(node);
+    //hack: add property 'id' to the object for frontend consumptions 
+    const nodeObject = node.toObject();
+    nodeObject.id = node._id;
+
+    res.status(200).send(nodeObject);
 });
 
 /**
@@ -46,15 +50,22 @@ router.get('/:id', auth, async (req, res) => {
  * @example
  * get/type/:type
  */
-router.get('/type/:type', auth, async (req, res) => {
-    const node = await Node.find({type: req.params.type})
+router.get('/type/:type', async (req, res) => {
+    const nodes = await Node.find({type: req.params.type})
         .catch (error => {
             res.status(500).send(error);
         });
 
-    if (!node) return res.status(404).send();
+    if (!nodes) return res.status(404).send();
 
-    res.status(200).send(node);
+    //hack: add property 'id' to the object for frontend consumptions 
+    const nodeCollection = nodes.map( node => {
+        const nodeObject = node.toObject();
+        nodeObject.id = node._id;
+        return nodeObject;
+    });
+
+    res.status(200).send(nodeCollection);
 });
 
 /**
@@ -72,7 +83,7 @@ router.get('/type/:type', auth, async (req, res) => {
  * @example
  * get/?id=_id&name=name&type=type&limit=10&skip=20
  */
-router.get('/', auth, async (req, res) => {
+router.get('/', async (req, res) => {
     const match = {};
 
     //query params
@@ -105,7 +116,14 @@ router.get('/', auth, async (req, res) => {
         }
     }
 
-    res.status(200).send(nodes);
+    //hack: add property 'id' to the object for frontend consumptions 
+    const nodeCollection = nodes.map( node => {
+        const nodeObject = node.toObject();
+        nodeObject.id = node._id;
+        return nodeObject;
+    });
+
+    res.status(200).send(nodeCollection);
 });
 
 /**
@@ -138,7 +156,7 @@ router.post('/', auth, async (req, res) => {
 
     //update or update 
     if (node) {
-        res.status(400).send({message: 'Node already exists'});
+        return res.status(400).send({message: 'Node already exists'});
 
         //alternativelly, we could update the node
         // node = await updateNode(node,req.body)
@@ -147,12 +165,17 @@ router.post('/', auth, async (req, res) => {
         // res.status(200).send(node);
 
     } else {
+        
         node = await createNode(req.body)
             .catch(error => {
                 res.status(500).send(error);
             });
         
-        res.status(201).send(node);
+        //hack: add property 'id' to the object for frontend consumptions 
+        const nodeObject = node.toObject();
+        nodeObject.id = node._id;
+
+        res.status(201).send(nodeObject);
     }
         
 });
@@ -190,8 +213,11 @@ router.patch('/:id', auth, async (req, res) => {
         .catch (error => {
             res.status(500).send(error);
         });
-
-    res.status(200).send(node);
+    //hack: add property 'id' to the object for frontend consumptions 
+    const nodeObject = node.toObject();
+    nodeObject.id = node._id;
+    
+    res.status(200).send(nodeObject);
 });
 
 /**
@@ -215,17 +241,17 @@ router.delete('/:id', auth, async (req, res) => {
     // not found
     if (!node) return res.status(404).send();
 
+    //hack: add property 'id' to the object for frontend consumptions 
+    const nodeObject = node.toObject();
+    nodeObject.id = node._id;
+
     //delete node
-    const result = await deleteNode(node)
+    await deleteNode(node)
         .catch (error => {
             res.status(500).send(error);
         });
    
-    res.status(200).send({
-        action: 'delete',
-        target: result.node,
-        relations: result.relationships.nModified
-    });
+    res.status(200).send(nodeObject);
 });
 
 /**
@@ -250,11 +276,18 @@ router.post('/import', auth, async (req, res) => {
         collection = await utilities.importRelation(data);
     }
 
+    //hack: add property 'id' to the object for frontend consumptions 
+    collection = collection.map( node => {
+        const nodeObject = node.toObject();
+        nodeObject.id = node._id;
+        return nodeObject;
+    });
+
     res.status(201).send(collection);
 });
 
 
-//* Auxiliar Funciontions */
+//* Auxiliar Functions */
 
 const findNode = async ({id, name, type}) => {
     let node;
@@ -276,56 +309,70 @@ const findNode = async ({id, name, type}) => {
 };
 
 const createNode = async (data) => {
-    const node = new Node(data);
-    await node.save()
-        .catch(error => {
-            throw new Error(error);
-        });
 
-    //add reciprocal relations
-    if (data.relations) {
-        await Node.updateMany({
-            _id: { 
-                $in: node.relations
-            }},{
-                $push: { relations: node._id}
-            });
+    if (data.relationToAdd) {
+         //translate relations to add
+        data.relations = data.relationToAdd;
+        delete data.relationToAdd; //delete attribute to avoid conflict
+    }
+
+    try {
+        const node = new Node(data);
+        await node.save();
+
+        //add reciprocal relations
+        if (data.relations) await addReciprocalRelations(node._id, node.relations);
+
+        return node;
+
+    } catch(error) {
+        throw new Error(error);
     }
     
-    return node;
 };
 
 const updateNode = async (node, data) => {
-
     const updates = Object.keys(data);
 
-     //If relations to remove
-     if (data.relationsToRemove) {
+     //if relations to remove
+     if (data.relationToDelete) {
         //filter out 
         node.relations = node.relations.filter( rel => {
-            if (!data.relationsToRemove.includes(rel.toString())) return rel;
+            if (!data.relationToDelete.includes(rel.toString())) return rel;
         });
 
+        //
+        await deleteReciprocalRelations(node._id, data.relationToDelete);
+
         //delete attribute to avoid conflict
-        delete data.relationsToRemove;
+        delete data.relationToDelete;
     }
 
     //if relations to add
-    if (data.relationsToAdd) {
+    if (data.relationToAdd) {
         //check for duplications
-        data.relationsToAdd = data.relationsToAdd.filter( rel => {
+        data.relationToAdd = data.relationToAdd.filter( rel => {
             if (!node.relations.includes(rel)) return rel;
         });
+
+         await addReciprocalRelations(node._id, data.relationToAdd);
     
         //add 
-        node.relations = [...node.relations, ...data.relationsToAdd];
+        node.relations = [...node.relations, ...data.relationToAdd];
         
         //delete attribute to avoid conflict
-        delete data.relationsToAdd;
+        delete data.relationToAdd;
     }
 
     // //update other attributes 
-    updates.forEach((update) => node[update] = data[update]);
+    updates.forEach((update) => {
+        if(node[update] == undefined) {
+            node.set(update, data[update]);
+        } else {
+            node[update] = data[update];
+        }
+    });
+    
     node = await node.save()
         .catch( error => {
             throw new Error(error);
@@ -335,29 +382,36 @@ const updateNode = async (node, data) => {
 };
 
 const deleteNode = async (node) => {
-    
     try {
         //remove reference on other nodes
-        //use $pull to remove one iten in a array
-        const relationships = await Node.updateMany({
-            relations: {
-                _id: node._id
-            }},{
-                $pull: { relations: node._id}
-            });
+        const relationships = await deleteReciprocalRelations(node._id, node.relations);
 
         //remove node
         await node.remove();
 
-        return {
-            node,
-            relationships
-        };
+        return node;
 
     } catch(error) {
         throw new Error(error);
     }
 };
 
+const addReciprocalRelations = async (sourceID, relations) => {
+    return await Node.updateMany({
+        _id: { 
+            $in: relations
+        }},{
+            $push: { relations: sourceID}
+        });
+};
+
+const deleteReciprocalRelations = async (sourceID, relations) => {
+    return await Node.updateMany({
+        _id: { 
+            $in: relations
+        }},{
+            $pull: { relations: sourceID}
+        });
+};
 
 module.exports = router;
