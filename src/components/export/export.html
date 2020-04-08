@@ -13,7 +13,7 @@
             <md-subheader class="md-accent">Export Data</md-subheader>
             
             <div layout="column"
-                 layout-align="start start">
+                layout-align="start start">
                 
                 <div layout="row"
                     layout-align="end center"
@@ -31,9 +31,9 @@
                     </md-input-container>
 
                     <md-button type="submit"
-                            name="saveData"
-                            ng-disabled="disabled()"
-                            ng-click="exportData()">
+                        name="saveData"
+                        ng-disabled="disabled()"
+                        ng-click="exportData()">
                         <md-icon md-font-icon="material-icons">file_download</md-icon>
                     </md-button>
 
@@ -49,8 +49,8 @@
         <md-content layout-padding>
 
             <div layout="row"
-                 class="no-vertical-margin no-horizontal-margin"
-                 layout-align="end center">
+                class="no-vertical-margin no-horizontal-margin"
+                layout-align="end center">
                 <md-input-container flex="80">
                     <label class="md-body-1">File Type</label>
                     <md-select ng-model="graphFileType" class="md-body-1 no-vertical-margin">
@@ -61,16 +61,16 @@
                 </md-input-container>
                 
                 <md-button type="submit"
-                        name="saveGraph"
-                        ng-disabled="disabled()"
-                        ng-click="exportGraph()">
+                    name="saveGraph"
+                    ng-disabled="disabled()"
+                    ng-click="exportGraph()">
                     <md-icon md-font-icon="material-icons">file_download</md-icon>
                 </md-button>
             </div>
 
             <div ng-if="netVisLayout.gooeyFX == true" 
-                 class="no-vertical-margin no-horizontal-margin md-caption"
-                 md-colors="::{color: '{{theme}}-primary-400'}">
+                class="no-vertical-margin no-horizontal-margin md-caption"
+                md-colors="::{color: '{{theme}}-primary-400'}">
                 <span ng-if="graphFileType == 'svg'">Gooey FX will be embedded in the SVG file but some applications might not display it properly.</span>
                 <span ng-if="graphFileType == 'png'">Gooey FX will be removed.</span>
             </div>
@@ -78,14 +78,6 @@
         </md-content>
     
         <md-divider></md-divider>
-
-        <!-- <md-content layout="row"
-                    layout-padding
-                    ng-if="deviceDetector.browser == 'safari'"
-                    class="md-caption"
-                    md-colors="::{color: '{{theme}}-primary-400'}">
-                <span>Safari may open the file in a new window. To save the file navigate to File -> Save As.</span>
-        </md-content> -->
 
     </md-content>
  

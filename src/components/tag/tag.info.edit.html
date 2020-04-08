@@ -1,8 +1,8 @@
 <div id="tag-card-editing"
-     role="dialog"
-     flex="100"
-     aria-label="tag-card-editing"
-     md-theme="appTheme">
+    role="dialog"
+    flex="100"
+    aria-label="tag-card-editing"
+    md-theme="appTheme">
 
     <md-card class="tag-card-edit">
         <form>
@@ -10,8 +10,8 @@
             
             <div flex="5">
                 <md-button class="md-icon-button"
-                           ng-disabled="true"
-                           aria-label="Edit-icon">
+                    ng-disabled="true"
+                    aria-label="Edit-icon">
                     <md-icon md-font-icon="material-icons">edit</md-icon>
                 </md-button>
             </div>
@@ -20,12 +20,12 @@
                 <div flex="40"></div>
                 <div>
                     <md-input-container md-no-float
-                                        class="custom-input-container-nofloat">
+                        class="custom-input-container-nofloat">
                         <md-select ng-model="tag.type"
-                                   required
-                                   placeholder="Type" 
-                                   class="md-block md-no-underline md-select-input-custom"
-                                   md-on-close="updatePosition()">
+                            required
+                            placeholder="Type" 
+                            class="md-block md-no-underline md-select-input-custom"
+                            md-on-close="updatePosition()">
                             <md-option value="Department">Department</md-option>
                             <md-option value="Interest">Interest</md-option>
                             <md-option value="Researcher">Researcher</md-option>
@@ -37,8 +37,8 @@
 
             <div>
                 <md-button class="md-icon-button"
-                           ng-click="closeDialog()"
-                           aria-label="Close Dialog">
+                    ng-click="closeDialog()"
+                    aria-label="Close Dialog">
                     <md-icon md-font-icon="material-icons md-18">clear</md-icon>
                     <md-tooltip md-direction="top" md-delay="1000">Close</md-tooltip>
                 </md-button>
@@ -55,8 +55,8 @@
                         <md-input-container class="md-block">
                             <label>Name</label>
                             <input required
-                                    ng-model="tag.name"
-                                    aria-label="name">
+                                ng-model="tag.name"
+                                aria-label="name">
                         </md-input-container>
                     </div>
                     
@@ -64,13 +64,13 @@
                         <md-input-container flex="50" class="md-block">
                             <label>First Name</label>
                             <input required
-                                    ng-model="tag.first"
-                                    aria-label="First Name">
+                                ng-model="tag.first"
+                                aria-label="First Name">
                         </md-input-container>
                         <md-input-container flex="50" class="md-block">
                             <label>Last Name</label>
                             <input ng-model="tag.last"
-                                   aria-label="Last name">
+                                aria-label="Last name">
                         </md-input-container>
                     </div>
 
@@ -80,9 +80,7 @@
 
         </md-card-title>
 
-        
         <md-divider></md-divider>
-
 
         <md-content>
 
@@ -91,7 +89,7 @@
                     <md-input-container class="md-block">
                         <label>Website</label>
                         <input ng-model="tag.website"
-                                aria-label="Website">
+                            aria-label="Website">
                     </md-input-container>
                 </div>
             </div>
@@ -102,16 +100,16 @@
                 <md-subheader class="md-accent">Departments</md-subheader>
                 <div class="tag-info-relations-inner">
                     <md-chips name="departments"
-                              class="custom-chips"
-                              ng-model="departments" 
-                              md-transform-chip="addNewRelation($chip,departments)"
-                              md-require-match="true">
+                        class="custom-chips"
+                        ng-model="departments" 
+                        md-transform-chip="addNewRelation($chip,departments)"
+                        md-require-match="true">
 
                         <md-autocomplete md-selected-item="selectedTagRelation"
-                                            md-search-text="searchTagRelationInput"
-                                            md-items="item in queryTagRelation(searchTagRelationInput,'Department')"
-                                            md-item-text="item.name"
-                                            placeholder="+">
+                            md-search-text="searchTagRelationInput"
+                            md-items="item in queryTagRelation(searchTagRelationInput,'Department')"
+                            md-item-text="item.name"
+                            placeholder="+">
                             <md-item-template>
                                 <span md-highlight-text="searchTagRelationInput">{{item.name}}</span>
                             </md-item-template>
@@ -124,8 +122,8 @@
                             {{$chip.name}}
                         </md-chip-template>
                         <button md-chip-remove
-                                class="remove-link-chip"
-                                ng-click="deleteRelation($chip)">
+                            class="remove-link-chip"
+                            ng-click="deleteRelation($chip)">
                             <md-icon md-font-icon="material-icons">cancel</md-icon>
                         </button>
                     </md-chips>
@@ -139,16 +137,16 @@
                 <md-subheader class="md-accent">Researchers</md-subheader>
                 <div class="tag-info-relations-inner">
                     <md-chips name="researchers"
-                              class="custom-chips"
-                              ng-model="researchers" 
-                              md-transform-chip="addNewRelation($chip,researchers)"
-                              md-require-match="true">
+                        class="custom-chips"
+                        ng-model="researchers" 
+                        md-transform-chip="addNewRelation($chip,researchers)"
+                        md-require-match="true">
 
                         <md-autocomplete md-selected-item="selectedTagRelation"
-                                            md-search-text="searchTagRelationInput"
-                                            md-items="item in queryTagRelation(searchTagRelationInput,'Researcher')"
-                                            md-item-text="item.name"
-                                            placeholder="+">
+                            md-search-text="searchTagRelationInput"
+                            md-items="item in queryTagRelation(searchTagRelationInput,'Researcher')"
+                            md-item-text="item.name"
+                            placeholder="+">
                             <md-item-template>
                                 <span md-highlight-text="searchTagRelationInput">{{item.name}}</span>
                             </md-item-template>
@@ -161,8 +159,8 @@
                             {{$chip.name}}
                         </md-chip-template>
                         <button md-chip-remove
-                                class="remove-link-chip"
-                                ng-click="deleteRelation($chip)">
+                            class="remove-link-chip"
+                            ng-click="deleteRelation($chip)">
                             <md-icon md-font-icon="material-icons">cancel</md-icon>
                         </button>
                     </md-chips>
@@ -170,23 +168,22 @@
 
             </div>
 
-
             <div ng-if="tag.type =='Researcher'">
 
                 <md-divider></md-divider>
                 <md-subheader class="md-accent">Interests</md-subheader>
                 <div class="tag-info-relations-inner">
                     <md-chips name="interests"
-                              class="custom-chips"
-                              ng-model="interests" 
-                              md-transform-chip="addNewRelation($chip,interests)"
-                              md-require-match="true">
+                        class="custom-chips"
+                        ng-model="interests" 
+                        md-transform-chip="addNewRelation($chip,interests)"
+                        md-require-match="true">
 
                         <md-autocomplete md-selected-item="selectedTagRelation"
-                                            md-search-text="searchTagRelationInput"
-                                            md-items="item in queryTagRelation(searchTagRelationInput,'Interest')"
-                                            md-item-text="item.name"
-                                            placeholder="+">
+                            md-search-text="searchTagRelationInput"
+                            md-items="item in queryTagRelation(searchTagRelationInput,'Interest')"
+                            md-item-text="item.name"
+                            placeholder="+">
                             <md-item-template>
                                 <span md-highlight-text="searchTagRelationInput">{{item.name}}</span>
                             </md-item-template>
@@ -199,8 +196,8 @@
                             {{$chip.name}}
                         </md-chip-template>
                         <button md-chip-remove
-                                class="remove-link-chip"
-                                ng-click="deleteRelation($chip)">
+                            class="remove-link-chip"
+                            ng-click="deleteRelation($chip)">
                             <md-icon md-font-icon="material-icons">cancel</md-icon>
                         </button>
                     </md-chips>
@@ -216,17 +213,17 @@
             <md-card-actions layout="row" layout-align="space-between center">
                 <div flex="15">
                     <md-button ng-if="action!='add'"
-                               class="md-warn"
-                               type="submit"
-                               aria-label="Delete"
-                               ng-click="deleteTag($event)">Delete</md-button>
+                        class="md-warn"
+                        type="submit"
+                        aria-label="Delete"
+                        ng-click="deleteTag($event)">Delete</md-button>
                 </div>
                 <div flex="15">
                     <md-button class="md-raised md-accent"
-                                type="submit"
-                                ng-disabled="saveDisable()"
-                                ng-click="saveTag()"
-                                aria-label="Save">Save</md-button>
+                        type="submit"
+                        ng-disabled="saveDisable()"
+                        ng-click="saveTag()"
+                        aria-label="Save">Save</md-button>
                 </div>
 
             </md-card-actions>

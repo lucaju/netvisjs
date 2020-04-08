@@ -9,35 +9,35 @@
 
                 <div>
                     <md-button class="md-icon-button"
-                                ng-if="checkUserLevel(1)"
-                                ng-click="showEditTagPanel({
-                                     action: 'add'
-                                    })"
-                                aria-label="add">
+                        ng-if="checkUserLevel(1)"
+                        ng-click="showEditTagPanel({
+                                action: 'add'
+                            })"
+                        aria-label="add">
                         <md-icon md-font-icon="material-icons md-18">add_circle_outline</md-icon>
                         <md-tooltip md-direction="bottom" md-delay="appCtrl.delayTooltip">Add Tag</md-tooltip>
                     </md-button>
 
                     <md-button class="md-icon-button"
-                                ng-class="{'md-warn':filtered}"
-                                ng-click="filterTagByType(!filtered)"
-                                aria-label="filter">
+                        ng-class="{'md-warn':filtered}"
+                        ng-click="filterTagByType(!filtered)"
+                        aria-label="filter">
                         <md-icon md-font-icon="material-icons md-18">filter_list</md-icon>
                         <md-tooltip md-direction="bottom" md-delay="appCtrl.delayTooltip">Selected only</md-tooltip>
                     </md-button>
 
                     <md-button class="md-icon-button"
-                                ng-class="{'md-warn':searchBoxVisibility}"
-                                ng-click="showTagSearchBox(!searchBoxVisibility)"
-                                aria-label="search">
+                        ng-class="{'md-warn':searchBoxVisibility}"
+                        ng-click="showTagSearchBox(!searchBoxVisibility)"
+                        aria-label="search">
                         <md-icon md-font-icon="material-icons md-18">search</md-icon>
                         <md-tooltip md-direction="bottom" md-delay="appCtrl.delayTooltip">Search</md-tooltip>
                     </md-button>
 
                     <md-button class="md-icon-button animate-show"
-                                ng-click="clearTagSelection()"
-                                ng-show="netVis.nodes.length > 0"
-                                aria-label="clear">
+                        ng-click="clearTagSelection()"
+                        ng-show="netVis.nodes.length > 0"
+                        aria-label="clear">
                         <md-icon md-font-icon="material-icons md-18">clear</md-icon>
                         <md-tooltip md-direction="bottom" md-delay="appCtrl.delayTooltip">Clear selection</md-tooltip>
                     </md-button>
@@ -48,14 +48,13 @@
 
          <div class="animate-show"
                     ng-show="searchBoxVisibility">
-            <md-input-container md-no-float
-                                class="md-block search-box">
+            <md-input-container md-no-float class="md-block search-box">
                 <md-icon class="search-box-icon" md-font-icon="material-icons">search</md-icon>
                 <input id="tag_search"
-                        class="search-query input-no-underline"
-                        ng-model="searchQuery.name"
-                        placeholder="Search"
-                        type="text">
+                    class="search-query input-no-underline"
+                    ng-model="searchQuery.name"
+                    placeholder="Search"
+                    type="text">
             </md-input-container>
             <md-divider></md-divider>
         </div>
@@ -68,24 +67,24 @@
                 <v-pane-content>
                     <md-virtual-repeat-container id="vertical-container" ng-style="tagListHeight()">
                         <md-list-item md-virtual-repeat="tag in dataNodes | filter:{'name':searchQuery.name} | filter:{'type':'Researcher'} | filter:{'selected':searchQuery.selected} | orderBy:'name'"
-                                        class="repeated-item"
-                                        flex
-                                        ng-mouseenter="showTagEditButton(tag.id,true)"
-                                        ng-mouseleave="showTagEditButton(false)"
-                                        ng-animate="'animate'"
-                                        ng-click="tagPrimaryAction(tag)">
+                            class="repeated-item"
+                            flex
+                            ng-mouseenter="showTagEditButton(tag.id,true)"
+                            ng-mouseleave="showTagEditButton(false)"
+                            ng-animate="'animate'"
+                            ng-click="tagPrimaryAction(tag)">
                             <md-icon ng-if="tagChecked(tag)"
-                                        ng-style=highlightTags(tag)
-                                        md-font-icon="material-icons md-18">label</md-icon>
+                                ng-style=highlightTags(tag)
+                                md-font-icon="material-icons md-18">label</md-icon>
                             <p>{{tag.name}}
                                 <md-icon ng-if="tag.new"
-                                         md-font-icon="material-icons md-18">fiber_new</md-icon>
+                                    md-font-icon="material-icons md-18">fiber_new</md-icon>
                             </p>
                             <md-icon class="md-secondary"
-                                        ng-if="itemTagOver == tag.id"
-                                        ng-click="showTagInfoPanel(tag,'view')"
-                                        aria-label="info"
-                                        md-font-icon="material-icons md-18">info_outline</md-icon>
+                                ng-if="itemTagOver == tag.id"
+                                ng-click="showTagInfoPanel(tag,'view')"
+                                aria-label="info"
+                                md-font-icon="material-icons md-18">info_outline</md-icon>
                             </md-list-item>
                         </md-list-item>
                     </md-virtual-repeat-container>
@@ -100,24 +99,24 @@
                 <v-pane-content>
                     <md-virtual-repeat-container id="vertical-container" ng-style="tagListHeight()">
                         <md-list-item md-virtual-repeat="tag in dataNodes | filter:{'name':searchQuery.name} | filter:{'type':'Interest'} | filter:{'selected':searchQuery.selected} | orderBy:'name'"
-                                        class="repeated-item"
-                                        flex
-                                        ng-mouseenter="showTagEditButton(tag.id,true)"
-                                        ng-mouseleave="showTagEditButton(false)"
-                                        ng-animate="'animate'"
-                                        ng-click="tagPrimaryAction(tag)">
+                            class="repeated-item"
+                            flex
+                            ng-mouseenter="showTagEditButton(tag.id,true)"
+                            ng-mouseleave="showTagEditButton(false)"
+                            ng-animate="'animate'"
+                            ng-click="tagPrimaryAction(tag)">
                             <md-icon ng-if="tagChecked(tag)"
-                                        ng-style=highlightTags(tag)
-                                        md-font-icon="material-icons md-18">label</md-icon>
+                                ng-style=highlightTags(tag)
+                                md-font-icon="material-icons md-18">label</md-icon>
                             <p>{{tag.name}}
-                                 <md-icon ng-if="tag.new"
-                                         md-font-icon="material-icons md-18">fiber_new</md-icon>
+                                <md-icon ng-if="tag.new"
+                                    md-font-icon="material-icons md-18">fiber_new</md-icon>
                             </p>
                             <md-icon class="md-secondary"
-                                        ng-if="itemTagOver == tag.id"
-                                        ng-click="showTagInfoPanel(tag,'view')"
-                                        aria-label="info"
-                                        md-font-icon="material-icons md-18">info_outline</md-icon>
+                                ng-if="itemTagOver == tag.id"
+                                ng-click="showTagInfoPanel(tag,'view')"
+                                aria-label="info"
+                                md-font-icon="material-icons md-18">info_outline</md-icon>
                             </md-list-item>
                         </md-list-item>
                     </md-virtual-repeat-container>
@@ -132,24 +131,24 @@
                 <v-pane-content>
                     <md-virtual-repeat-container id="vertical-container" ng-style="tagListHeight()">
                         <md-list-item md-virtual-repeat="tag in dataNodes | filter:{'name':searchQuery.name} | filter:{'type':'Department'} | filter:{'selected':searchQuery.selected} | orderBy:'name'"
-                                        class="repeated-item"
-                                        flex
-                                        ng-mouseenter="showTagEditButton(tag.id,true)"
-                                        ng-mouseleave="showTagEditButton(false)"
-                                        ng-animate="'animate'"
-                                        ng-click="tagPrimaryAction(tag)">
+                            class="repeated-item"
+                            flex
+                            ng-mouseenter="showTagEditButton(tag.id,true)"
+                            ng-mouseleave="showTagEditButton(false)"
+                            ng-animate="'animate'"
+                            ng-click="tagPrimaryAction(tag)">
                             <md-icon ng-if="tagChecked(tag)"
-                                        ng-style=highlightTags(tag)
-                                        md-font-icon="material-icons md-18">label</md-icon>
+                                ng-style=highlightTags(tag)
+                                md-font-icon="material-icons md-18">label</md-icon>
                            <p>{{tag.name}}
                                 <md-icon ng-if="tag.new"
-                                         md-font-icon="material-icons md-18">fiber_new</md-icon>
+                                    md-font-icon="material-icons md-18">fiber_new</md-icon>
                            </p>
                            <md-icon class="md-secondary"
-                                        ng-if="itemTagOver == tag.id"
-                                        ng-click="showTagInfoPanel(tag,'view')"
-                                        aria-label="info"
-                                        md-font-icon="material-icons md-18">info_outline</md-icon>
+                                ng-if="itemTagOver == tag.id"
+                                ng-click="showTagInfoPanel(tag,'view')"
+                                aria-label="info"
+                                md-font-icon="material-icons md-18">info_outline</md-icon>
                             </md-list-item>
                         </md-list-item>
                     </md-virtual-repeat-container>
