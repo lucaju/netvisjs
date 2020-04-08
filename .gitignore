@@ -1,6 +1,5 @@
 #modules
 node_modules/
-src/vendor/
 
 #dev dir
 data/
