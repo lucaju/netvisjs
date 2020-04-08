@@ -264,7 +264,6 @@ router.post('/logoutAll', auth, async (req, res) => {
  * post/forgotPassword
  */
 router.post('/forgotPassword', async (req, res) => {
-	console.log(req.body);
 	// find user
 	const user = await User.findByEmail(req.body.email)
 		.catch((error) => {
@@ -282,9 +281,9 @@ router.post('/forgotPassword', async (req, res) => {
 			name: user.fullName(),
 			pwdToken
 		});
-	
+
 		res.status(200).send();
-	} catch(error) {
+	} catch (error) {
 		res.status(500);
 	}
 });

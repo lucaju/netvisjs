@@ -3,9 +3,11 @@ const sgMail = require('@sendgrid/mail');
 const Meta = require('../models/meta');
 const {welcomeEmail,passwordResetEmail} = require('./email-composer');
 
-sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 const getMeta = async () => {
+
+    sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
     const meta = await Meta.findOne()
         .catch((error) => {
             throw new Error(error);
