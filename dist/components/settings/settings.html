@@ -1,0 +1,69 @@
+<div id="settingsPage" ng-controller="SettingsCtrl as settingsCtrl">
+
+    <section id="settings"
+        layout="column"
+        ng-if="!accountEditing">
+    
+        <md-toolbar>
+            <div layout="row" class="md-toolbar-tools">
+                <h2 class="md-tile">Settings</h2>
+            </div>
+        </md-toolbar>
+
+        <md-content class="innerPage">
+
+            <md-subheader class="md-accent">
+                <div layout="row" layout-align="space-between center">
+                    <span flex>Preferences</span>
+                </div>
+            </md-subheader>
+
+            <div layout="column" layout-align="start start">
+                <div layout="row" flex="100" layout-fill layout-padding>
+                    <md-input-container flex="100">
+                        <label>Title</label>
+                        <input id="title-input" ng-model="project.title" aria-label="Title">
+                    </md-input-container>
+                </div>
+            </div>
+
+            <md-subheader class="md-accent">
+                <div layout="row" layout-align="space-between center">
+                    <span flex="85">User Accounts</span>
+                    <div flex="15">
+                        <md-button class="md-icon-button custom-sub-header-md-icon-buttton"
+                            ng-click="showEditUserPanel()"
+                            aria-label="create">
+                            <md-icon md-font-icon="material-icons md-18">add_circle_outline</md-icon>
+                        </md-button>
+                    </div>
+                </div>
+            </md-subheader>
+ 
+            <md-list flex class="md-dense">
+                <md-list-item class="md-2-line"
+                    ng-repeat="item in usersAccountData | orderBy:'firstName'"
+                    ng-mouseenter="showEditAccountButton(item._id,true)"
+                    ng-mouseleave="showEditAccountButton(false)">
+                    <md-icon ng-class="{'md-warn':item.level == 1, 'md-accent':item.level == 0}"
+                        md-font-icon="material-icons">person</md-icon>
+                    <div class="md-list-item-text" layout="column">
+                        <h3>{{item.firstName}} {{item.lastName}}
+                            <md-icon ng-if="item.new"
+                                     md-font-icon="material-icons md-18">fiber_new</md-icon>
+                        </h3>
+                        <h4>{{item.email}}</h4>
+                    </div>
+                    <md-icon class="md-secondary"
+                        ng-if="editAccountButtonVisibility(item._id)"
+                        ng-click="showEditUserPanel(item)"
+                        aria-label="edit"
+                        md-font-icon="material-icons md-18">edit</md-icon>
+                </md-list-item>
+            </md-list>
+            
+        </md-content>
+
+    </section>
+
+</div>
