@@ -7,36 +7,44 @@ const {sendWelcomeEmail} = require('../../emails/account');
 
 const install = async credentials => {
 
-    //A. ENV FILE
-    const env = `# MONGODB
-MONGODB_HOST=${credentials.db.host}
-MONGODB_PORT=${credentials.db.port}
-MONGODB_DATABASE=${credentials.db.database}
+    const jwt_token_secret = '19ma7mYU1pNhJM8p6zSyqI1MsOfH4CM7aHnICI1N35FsoeHyupTdULqBSPztzE8';
 
-#TOKENSECRET
-JWT_SECRET='19ma7mYU1pNhJM8p6zSyqI1MsOfH4CM7aHnICI1N35FsoeHyupTdULqBSPztzE8`;
+    //A. ENV FILE
+    const env = `
+#MONGODB
+MONGODB_HOST=${credentials.mongoDB.host}
+MONGODB_PORT=${credentials.mongoDB.port}
+MONGODB_DATABASE=${credentials.mongoDB.database}
+
+#SENDGRID
+SENDGRID_API_KEY=${credentials.meta.sendgridAPI}
+
+#JWT_TOKEN_SECRET
+JWT_SECRET=${jwt_token_secret}`;
 
     await fs.writeFile('.env', env)
         .catch(() => {
             throw new Error('Installation failed.');
         });
 
+
     //B. UPDATE proceprocess.env
-    process.env.MONGODB_HOST = credentials.db.host;
-    process.env.MONGODB_PORT = credentials.db.port;
-    process.env.MONGODB_DATABASE = credentials.db.database;
-    process.env.JWT_SECRET = '19ma7mYU1pNhJM8p6zSyqI1MsOfH4CM7aHnICI1N35FsoeHyupTdULqBSPztzE8';
+    process.env.MONGODB_HOST = credentials.mongoDB.host;
+    process.env.MONGODB_PORT = credentials.mongoDB.port;
+    process.env.MONGODB_DATABASE = credentials.mongoDB.database;
+    process.env.SENDGRID_API_KEY = credentials.meta.sendgridAPI;
+    process.env.JWT_SECRET = jwt_token_secret;
+
 
     //C. Connect MongoDB
-    mongoDB.connect();
+    await mongoDB.connect();
 
 
     //D. METADATA
     const meta = new Meta({
         title: credentials.meta.title,
-        url: credentials.url,
-        email: credentials.user.email,
-        sendgridAPI: credentials.meta.sendgridAPI
+        url: credentials.meta.url,
+        email: credentials.user.email
     });
 
     await meta.save()
@@ -59,7 +67,6 @@ JWT_SECRET='19ma7mYU1pNhJM8p6zSyqI1MsOfH4CM7aHnICI1N35FsoeHyupTdULqBSPztzE8`;
             throw new Error(error);
         });
 
-
     //create password token
     const pwdToken = await user.generatePwdToken();
 
@@ -74,8 +81,6 @@ JWT_SECRET='19ma7mYU1pNhJM8p6zSyqI1MsOfH4CM7aHnICI1N35FsoeHyupTdULqBSPztzE8`;
     return meta;
 };
 
-const eraseENV = async () => {
-    await fs.writeFile('.env', '');
-};
+const eraseENV = async () => await fs.writeFile('.env', '');
 
 module.exports = install;

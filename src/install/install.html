@@ -3,10 +3,12 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Netvis Setup</title>
+    <title>NetVis Setup</title>
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicon-16x16.png">
 </head>
 
 <body ng-controller="InstallCtrl as installCtrl" ng-init="init()">
@@ -14,47 +16,53 @@
     <md-content md-theme="appTheme">
 
         <div id="main" flex="auto">
-            <h1 class="md-display-1">Netvis Setup</h1>
+            <h1 class="md-display-1">NetVis Setup</h1>
         </div>
 
         <section id="database" class="page" ng-show="status=='exist'">
                 <h1 class="md-headline">Already Insalled</h1>
                 <form layout="column" class="md-whiteframe-1dp">
-                    <p class="md-body-1">You appear to have already installed Netvis. To reinstall please clear your old database first.</p>
+                    <p class="md-body-1">It seems NetVis is already installed.</p>
                 </form>
 
             </section>
 
-        <section id="database" class="page" ng-show="status=='database'">
-            <h1 class="md-headline">1. Setup Database</h1>
+        <section id="database" class="page" ng-show="status=='mongoDB'">
+            <h1 class="md-headline">1. Setup MongoDB</h1>
 
-            <p class="md-body-1">First you need to provide some information for database connection.</p>
+            <p class="md-body-1">Provide information for MongoDB connection.</p>
 
             <form class="md-whiteframe-1dp">
                 <div layout="column">
 
                     <md-input-container class="input-custom">
-                        <label>Database Name</label>
+                        <label>Host</label>
                         <input type="text"
                             required
-                            ng-model="database.name"
-                            aria-label="Database Name">
+                            ng-model="mongoDB.host"
+                            placeholder="127.0.0.1"
+                            value="127.0.0.1"
+                            aria-label="MongoDB Host">
                     </md-input-container>
 
                     <md-input-container class="input-custom">
-                        <label>User Name</label>
+                        <label>Port</label>
                         <input type="text"
                             required
-                            ng-model="database.user"
-                            aria-label="Database User">
+                            ng-model="mongoDB.port"
+                            placeholder="27017"
+                            value="27017"
+                            aria-label="MongoDB Port">
                     </md-input-container>
 
                     <md-input-container class="input-custom">
-                        <label>Password</label>
-                        <input type="password"
+                        <label>Database</label>
+                        <input type="text"
                             required
-                            ng-model="database.password"
-                            aria-label="Database Password">
+                            ng-model="mongoDB.database"
+                            placeholder="netvis"
+                            value="netvis"
+                            aria-label="MongoDB Database">
                     </md-input-container>
 
                 </div>
@@ -66,15 +74,15 @@
 
             </form>
 
-            <md-button ng-click="getDatabaseInfo()"
-                ng-disabled="getDatabaseDisable()"
+            <md-button ng-click="getMongoDBInfo()"
+                ng-disabled="getMongoDBDisable()"
                 aria-label="Next">Next
                 <md-icon md-font-icon="material-icons">arrow_forward</md-icon>
             </md-button>
         </section>
 
-        <section id="project" class="page"  ng-show="status=='project'">
-            <h1 class="md-headline">2. Project Information</h1>
+        <section id="meta" class="page"  ng-show="status=='meta'">
+            <h1 class="md-headline">2. Website Information</h1>
 
             <p class="md-body-1">Great. Netvis is able to communicate with your database. Now, please provide the following information. Don't worry, you can alwasys change these setting later.</p>
 
@@ -82,25 +90,18 @@
                 <div layout="column">
 
                     <md-input-container class="input-custom">
-                        <label>Project Title</label>
+                        <label>Website Title</label>
                         <input type="text"
-                            ng-model="project.title"
-                            aria-label="Project Title"
+                            ng-model="meta.title"
+                            aria-label="Website Title"
                             value="Netvis">
                         <div class="hint">Optional.</div>
                     </md-input-container>
 
-                    <!-- <md-input-container class="input-custom">
-                        <label>Project URL</label>
-                        <input type="text"
-                            required
-                            ng-model="project.url"
-                            aria-label="Project URL">
-                        <div class="hint">The url where you are installing netvis and from where it will be accessible. Ex: <i>http://www.yourdomain.com/netvis</i></div>
-                    </md-input-container> -->
-
                 </div>
             </form>
+
+            <p class="md-body-1">Creater a user account for yourself. This account has administative privileges.</p>
 
             <form class="md-whiteframe-1dp">
                     <div layout="column">
@@ -125,8 +126,8 @@
                     </div>
                 </form>
 
-            <md-button ng-click="getProjectInfo()"
-                ng-disabled="getProjectDisable()"
+            <md-button ng-click="getMetaInfo()"
+                ng-disabled="getMetaDisable()"
                 aria-label="Next">Next
                 <md-icon md-font-icon="material-icons">arrow_forward</md-icon>
             </md-button>
@@ -136,9 +137,9 @@
                 <h1 class="md-headline">3. Email Service</h1>
 
                 <p class="md-body-1">Netvis uses email as the main communication tool to invite users and reset passwords.
-                    You must setup a free account at <a href="https://sendgrid.com" target="_blank">SendGrid</a> to be able to deliver these emails.
+                    You must setup a free account at <a href="https://sendgrid.com" target="_blank" rel=”noreferrer”>SendGrid</a> to be able to deliver these emails.
                     Please, follow the instructions on their website and provide your unique API KEY bellow.
-                    Don't worry, this will be securely stored in your database.</p> 
+                    This will be securely stored in the enviroment variables.</p> 
     
                 <form class="md-whiteframe-1dp">
                     <div layout="column">
@@ -147,7 +148,7 @@
                             <label>SendGrid API KEY</label>
                             <input type="text"
                                 required
-                                ng-model="project.sendGridAPI"
+                                ng-model="meta.sendgridAPI"
                                 aria-label="Send Grid API">
                         </md-input-container>
     
@@ -169,9 +170,9 @@
             <md-icon md-font-icon="material-icons checked md-warn md-hue-1">check</md-icon>
             <p class="md-body-1"><strong>All done!</strong><br/>
             Use your email and password to access the website.</p>
-            <md-button href="{{project.url}}"
+            <md-button href="{{meta.url}}"
                 class="md-fab md-mini md-primary"
-                title="{{project.title}}">
+                title="{{meta.title}}">
                 <md-icon md-font-icon="material-icons">arrow_forward</md-icon>
             </md-button>
         </section>

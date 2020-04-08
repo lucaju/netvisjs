@@ -14,41 +14,63 @@ router.use(express.json());
  * 
  * @async
  * @function
- * @param {String} req.body.db.host host ip
- * @param {String} req.body.db.port port 
- * @param {String} req.body.db.database Name of database 
- * @example
- * post/
- * {
- *  db: {
- *   host: '127.0.0.1',
- *   port: '27017',
- *   database: 'netvisjs'
- *  }
- * }
+ * @param {String} req.body.host host ip
+ * @param {String} req.body.port port 
+ * @param {String} req.body.database Name of database 
+ * @param {String} req.body.home Test over the home page
+ * @param {String} req.body.database Name of database 
+ * @returns {Object}
  */
 router.post('/connect', async (req, res) => {
+    //if database
+    if (!process.env.MONGODB_HOST || !process.env.MONGODB_PORT || !process.env.MONGODB_DATABASE) {
 
-    //missing data
-    if (!req.body.db.host || !req.body.db.port || !req.body.db.database) {
-        res.status(400).send({
-            message: 'Connection failed. Data Incomplete.'
+
+        if (req.body.home === true) {
+            return res.status(500).send();
+        }
+
+        //just test
+        if (!req.body.host) {
+            return res.status(200).send({
+                mongoDBExists: false,
+                message: 'Connection failed. Data Incomplete.'
+            });
+        }
+
+        //submit new credentials
+        if (!req.body.host || !req.body.port || !req.body.database) {
+            return res.status(400).send({
+                mongoDBExists: false,
+                message: 'Connection failed. Data Incomplete.'
+            });
+        }
+
+        //connect with provided credentials
+        await mongoDB.connect({
+            host: req.body.host,
+            port: req.body.port,
+            database: req.body.database
+        }).catch(error => {
+            return res.status(500).send({
+                message: 'Connection failed.',
+                error: error
+            });
         });
+        await mongoDB.close();
+
+        return res.status(200).send({
+            mongoDBReady: true
+        });
+
     }
 
-    //connect with provived credentials
-    await mongoDB.connect({
-        host: req.body.db.host,
-        port: req.body.db.port,
-        database: req.body.db.database
-    }).catch(error => {
-        res.status(500).send({
+    await mongoDB.connect().catch(error => {
+        return res.status(500).send({
             message: 'Connection failed.',
-            error: error
+            error: error,
         });
     });
-
-    await mongoDB.close();
 
     res.status(200).send();
 
@@ -59,9 +81,9 @@ router.post('/connect', async (req, res) => {
  * 
  * @async
  * @function
- * @param {String} req.body.db.host host ip
- * @param {String} req.body.db.port port 
- * @param {String} req.body.db.database Name of database 
+ * @param {String} req.body.mongoDB.host host ip
+ * @param {String} req.body.mongoDB.port port 
+ * @param {String} req.body.mongoDB.database Name of database 
  * @param {String} req.body.user.emails admin email
  * @param {String} req.body.user.password admin password
  * @param {String} req.body.meta.title Website title 
@@ -70,7 +92,7 @@ router.post('/connect', async (req, res) => {
  * @example
  * post
  * {
- *  db: {
+ *  mongoDB: {
  *   host: '127.0.0.1',
  *   port: '27017',
  *   database: 'netvisjs'
@@ -95,9 +117,9 @@ router.post('/install', async (req, res) => {
     }
 
     //B. CHECK DATA
-    if (!req.body.db.host ||
-        !req.body.db.port ||
-        !req.body.db.database ||
+    if (!req.body.mongoDB.host ||
+        !req.body.mongoDB.port ||
+        !req.body.mongoDB.database ||
         !req.body.user.email ||
         !req.body.user.password ||
         !req.body.meta.title ||
@@ -109,22 +131,23 @@ router.post('/install', async (req, res) => {
     }
 
     //C. Current url
-    req.body.url = `${req.protocol}://${req.hostname}`;
+    req.body.meta.url = `${req.protocol}://${req.hostname}`;
 
     //D. install
-    const metadata = await install(req.body)
+    const meta = await install(req.body)
         .catch(error => {
-            res.status(500).send({
+            return res.status(500).send({
                 message: 'Installation failed.',
                 error
             });
         });
 
+
     //E. Response
     res.status(201).send({
-        title: metadata.title,
-        url: metadata.url,
-        email: metadata.email
+        title: meta.title,
+        url: meta.url,
+        email: meta.email
     });
 });
 

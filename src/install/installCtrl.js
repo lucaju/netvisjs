@@ -3,121 +3,114 @@ import {app} from './AppInstallConfig';
 const init = () => {
 	app.controller('InstallCtrl', ($scope, $http) => {
 
-		$scope.status = '';
+		$scope.status = 'mongoDB';
 		$scope.error;
-		$scope.database = {
-			name: undefined,
-			user: undefined,
-			password: undefined
+		$scope.mongoDB = {
+			host: '127.0.0.1',
+			port: '27017',
+			database: 'NetVis'
 		};
-		$scope.project = {
+		$scope.meta = {
 			title: undefined,
-			url: undefined,
-			sendGridAPI: undefined
+			sendgridAPI: undefined
 		};
 		$scope.user = {
 			email: undefined,
 			password: undefined
 		};
 
-		$scope.getDatabaseDisable = () => {
-			if (!$scope.database.name) return true;
-			if (!$scope.database.user) return true;
-			if (!$scope.database.password) return true;
+		$scope.getMongoDBDisable = () => {
+			if (!$scope.mongoDB.host) return true;
+			if (!$scope.mongoDB.port) return true;
+			if (!$scope.mongoDB.database) return true;
 			return false;
 		};
 
-		$scope.getProjectDisable = () => {
-			if (!$scope.project.title) return true;
-			// if (!$scope.project.url) return true;
+		$scope.getMetaDisable = () => {
+			if (!$scope.meta.title) return true;
 			if (!$scope.user.email) return true;
 			if (!$scope.user.password) return true;
 			return false;
 		};
 
 		$scope.installDisable = () => {
-			if (!$scope.project.sendGridAPI) return true;
+			if (!$scope.meta.sendgridAPI) return true;
 			return false;
 		};
 
-		$scope.getDatabaseInfo = () => sendDBTest();
-		$scope.getProjectInfo = () => $scope.status = 'emailService';
+		$scope.getMongoDBInfo = () => sendDBTest($scope.mongoDB);
+		$scope.getMetaInfo = () => $scope.status = 'emailService';
 		$scope.install = () => install();
-		
-		$scope.init = () => {
-			sendDBTest();
-		};
 
-		const sendDBTest = () => {
+		$scope.init = () => sendDBTest();
 
-			// const req = {
-			// 	method: 'POST',
-			// 	url: '../api/shared/test_db.php',
-			// 	headers: {
-			// 		'Accept': 'application/json',
-			// 		'Content-Type': 'application/json'
-			// 	},
-			// 	data: $scope.database
-			// }
+		const sendDBTest = data => {
 
-			// $http(req).then( res => {
+			$http({
+				method: 'POST',
+				url: '/meta/connect',
+				headers: {
+					'Accept': 'application/json',
+					'Content-Type': 'application/json'
+				},
+				data: data
+			}).then(res => {
 
-			// 	if(res.status !== 200) $scope.error = true;
+				//if monogoDb is not setup.
+				if (res.data.mongoDBExists === false) return;
 
-			// 	//if instalation already exists
-			// 	if(res.data.env === true) {
-			// 		console.log(window.location);
-			// 		$scope.status = 'exist';
-			// 	}
-				
-			// 	// if forms is filled correctly
-			// 	if ($scope.database.name && $scope.database && $scope.database) {
-			// 		$scope.error = false;
-			// 		$scope.status = 'project';
-			// 	}
+				//if credentials are accepted
+				// if forms is filled correctly, move the next screen
+				if (res.data.mongoDBReady === true) {
+					$scope.error = false;
+					$scope.status = 'meta';
+					return;
+				}
 
-			// }, res => {
-			// 	if ($scope.status === 'database') $scope.error = true;
-			// 	$scope.status = 'database';
-			// });
+				//if instalation already exists: redirect to homepage
+				setTimeout(() => {
+					window.location.href = window.location.origin;
+				}, 6000);
+				return $scope.status = 'exist';
 
+			}, () => {
+				$scope.status = 'mongoDB';
+				$scope.error = true;
+			});
 		};
 
 
 		const install = () => {
 
-			const req = {
+			$http({
 				method: 'POST',
-				url: 'install.php',
+				url: '/meta/install',
 				headers: {
 					'Accept': 'application/json',
 					'Content-Type': 'application/json'
 				},
 				data: {
-					database: $scope.database,
-					project: $scope.project,
+					mongoDB: $scope.mongoDB,
+					meta: $scope.meta,
 					user: $scope.user
 				}
-			};
+			}).then(res => {
 
-			$http(req).then( res => {
 				$scope.error = false;
 				$scope.status = 'success';
 
-				console.log(res);
-				$scope.project.url = res.data.metadata.url;
+				$scope.meta.url = res.data.url;
 
 				setTimeout(() => {
-					window.location.href = $scope.project.url ;
+					window.location.href = $scope.meta.url;
 				}, 5000);
 
-			}, res => {
-				// console.log(res)
+			}, () => {
 				$scope.error = true;
 			});
 
 		};
-		
+
 	});
 };
 
