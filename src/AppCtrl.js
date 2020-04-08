@@ -56,28 +56,28 @@ const init = () => {
 		};
 
 		$scope.netVisLayout = {
-			display: 'network',					// 'network' || 'cluster'
-			cluster: 'type',					// 'type' || 'community'
-			gravity: 1,							// 0 - 10
-			charge: -70,						// -12 -60
-			distance: 100,						// 0 - 200
-			friction: 0.9,						// 0.9
-			collision: false,					// false || true
-			communityDetection: false,			// false || true
-			showNodes: true,					// false || true
-			nodeSize: 'weight', 				// 'default' || 'weight'
-			nodeScale: 3,						// 1 - 10
-			nodeColor: 'type',					// 'default' || 'type' || 'community'
-			showTitles: true,					// false || true
-			titleScale: false,					// false || true
-			titleInheritColor: false,			// false || true
-			showLinks: true,					// false || true
-			linkThickness: 'default',			// 'default' || 'weight'
-			linkColor: 'default',				// 'default' || 'community'
-			linkStrenght: 'min',				// 'min' || 'max'
-			gooeyFX: false						// false || true
+			display: 'network', // 'network' || 'cluster'
+			cluster: 'type', // 'type' || 'community'
+			gravity: 1, // 0 - 10
+			charge: -70, // -12 -60
+			distance: 100, // 0 - 200
+			friction: 0.9, // 0.9
+			collision: false, // false || true
+			communityDetection: false, // false || true
+			showNodes: true, // false || true
+			nodeSize: 'weight', // 'default' || 'weight'
+			nodeScale: 3, // 1 - 10
+			nodeColor: 'type', // 'default' || 'type' || 'community'
+			showTitles: true, // false || true
+			titleScale: false, // false || true
+			titleInheritColor: false, // false || true
+			showLinks: true, // false || true
+			linkThickness: 'default', // 'default' || 'weight'
+			linkColor: 'default', // 'default' || 'community'
+			linkStrenght: 'min', // 'min' || 'max'
+			gooeyFX: false // false || true
 		};
-		
+
 		$scope.emptyCanvas = {
 			message: 'Select a tag to start'
 		};
@@ -85,35 +85,41 @@ const init = () => {
 		//................
 
 		//TEST IF DB CONENCTION IS WORKING
-		// $http.get('api/shared/test_db.php').then( res => {
-		// 	if (res.status !== 200) {
-		// 		window.location.assign(`${window.location}install/install.html`);
-		// 	}
-		// }, res => {
-		// 	window.location.assign(`${window.location}install/install.html`);
-		// });
+		fetch('/meta/connect', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				home: true
+			})
+		}).then(res => {
+			if (res.status === 500) {
+				window.location.href = `${window.location.href}install/install.html`;
+			}
+		});
 
 		//get meta -- define title
-		$http.get('/meta').then( res => {
+		$http.get('/meta').then(res => {
 			if (res.status !== 200) $rootScope.project.title = 'Network Visualization';
 
 			$rootScope.project = res.data;
 			document.title = $rootScope.project.title;
 
-		}, error => {
+		}, () => {
 			$rootScope.project.title = 'Network Visualization';
 		});
 
 		//................
 
 		$scope.init = () => $scope.guestLogin();
-		
+
 		//guest login
 		$scope.guestLogin = () => {
 			$scope.user = {
 				id: 'guest',
 				email: null,
-				firstName:'guest',
+				firstName: 'guest',
 				token: null,
 				level: 2,
 				// credentials: user,
@@ -160,7 +166,7 @@ const init = () => {
 
 			$scope.infoPanel = $mdPanel.create(config);
 			$scope.infoPanel.open();
-			
+
 		};
 
 		$scope.$on('CloseLoginPanel', () => {
@@ -189,7 +195,7 @@ const init = () => {
 			$rootScope.user = $scope.user;
 
 			$rootScope.$broadcast('userSigned', $scope.user);
-			
+
 		});
 
 		$scope.logout = () => {
@@ -198,7 +204,7 @@ const init = () => {
 			const defaultUser = {
 				id: 'guest',
 				email: null,
-				firstName:'guest',
+				firstName: 'guest',
 				token: null,
 				level: 2,
 				// credentials: user,
@@ -211,7 +217,7 @@ const init = () => {
 				headers: {
 					Authorization: `Bearer ${$rootScope.user.token}`,
 				},
-			}).then( () => {
+			}).then(() => {
 				$scope.user = defaultUser;
 				$rootScope.user = $scope.user;
 				$rootScope.$broadcast('userSigned', $scope.user);
@@ -221,7 +227,7 @@ const init = () => {
 				$rootScope.user = $scope.user;
 				$rootScope.$broadcast('userSigned', $scope.user);
 			});
-			
+
 		};
 
 		/* Check user Level
@@ -267,8 +273,8 @@ const init = () => {
 		//................
 
 		const loadNodesData = () => {
-			$http.get('/nodes').then( res => {
-	
+			$http.get('/nodes').then(res => {
+
 				if (res.status !== 200) {
 					$scope.emptyCanvas.message = 'No tags available';
 					if ($scope.checkUserLevel(1)) $scope.emptyCanvas.message += '<br/> Add one to start';
@@ -285,7 +291,7 @@ const init = () => {
 					node.selected = false;
 
 					const nodeDate = DateTime.fromISO(node.createdAt);
-					
+
 					//check modified time/date. Less than 5 minutes mark as new
 					const diff = now.diff(nodeDate, 'minute');
 					if (diff.values.minutes - nodeDate.offset < 5) node.new = true;
@@ -296,8 +302,8 @@ const init = () => {
 
 				$rootScope.$broadcast('dataLoaded');
 
-			}, error => {
-				console.log(error);
+			}, () => {
+				// console.log(error);
 			});
 		};
 
