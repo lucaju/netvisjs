@@ -16,7 +16,6 @@ const init = () => {
 		$scope.currentUser = null;
 
 		let originalTitle = $scope.project.title;
-		$scope.sendgridAPI = null;
 
 		$scope.showEditUserPanel = user => {
 
@@ -97,7 +96,7 @@ const init = () => {
 
 		// ************ //
 
-		$scope.$on('loadSettings', (event,user) => {
+		$scope.$on('loadSettings', (event, user) => {
 
 			//re-define user
 			$scope.currentUser = user;
@@ -107,13 +106,10 @@ const init = () => {
 
 			//
 			const titleField = document.getElementById('title-input');
-			const sendgridField = document.getElementById('sendgrid-input');
 			titleField.addEventListener('focusout', titleChange);
-			sendgridField.addEventListener('focusout', sendgridChange);
 
 			//load data;
 			if ($scope.usersAccountData.length === 0) loadUsers();
-			if ($scope.sendgridAPI === null) loadsendgridAPI();
 
 		});
 
@@ -121,13 +117,6 @@ const init = () => {
 			if ($scope.project.title !== originalTitle) {
 				originalTitle = $scope.project.title;
 				updateMeta({title: $scope.project.title});
-			}
-		};
-
-		const sendgridChange = e => {
-			if ($scope.sendgridAPI !== e.target.value) {
-				$scope.sendgridAPI = e.target.value;
-				updateMeta({sendgridAPI: $scope.sendgridAPI});
 			}
 		};
 
@@ -143,7 +132,7 @@ const init = () => {
 				data
 			};
 
-			$http(req).then( res => {
+			$http(req).then(res => {
 
 				if (res.status === 503) return false;
 
@@ -155,41 +144,31 @@ const init = () => {
 				if (res.data.action === 'updated') {
 					$scope.showSimpleToastTag('Updated.');
 				}
-				
 
-			}, res => {
+			}, () => {
 				$scope.showSimpleToastTag('An error occurred!');
 			});
 		};
 
 		const loadUsers = () => {
-			$http.get('/users',{
+			$http.get('/users', {
 				headers: {
 					Accept: 'application/json',
 					'Content-Type': 'application/json',
 					Authorization: `Bearer ${$rootScope.user.token}`
 				}
-			}).then( res => {
+			}).then(res => {
 				if (res.status !== 200) return [];
 				$scope.usersAccountData = res.data;
-			}, res => {
+			}, () => {
 				// console.log(res);
 			});
 		};
 
-		const loadsendgridAPI = () => {
-			$http.get('/meta/sendgridAPI').then( res => {
-				if (res.status !== 200) return;
-				$scope.sendgridAPI = res.data;
-			}, res => {
-				// console.log(res);
-			});
-		};
+		$scope.$on('userAction', (event, {action,data}) => {
 
-		$scope.$on('userAction', (event,{action,data}) => {
-			
 			$scope.infoPanel = null;
-			
+
 			if (action === 'create') {
 
 				data.new = true;
@@ -222,11 +201,11 @@ const init = () => {
 		$scope.showSimpleToastTag = msg => {
 			$mdToast.show(
 				$mdToast.simple()
-					.textContent(msg)
-					.position('top center')
-					.hideDelay(3000)
-					.toastClass('toast-custom')
-					.parent(angular.element(document.querySelector('#viz-port')))
+				.textContent(msg)
+				.position('top center')
+				.hideDelay(3000)
+				.toastClass('toast-custom')
+				.parent(angular.element(document.querySelector('#viz-port')))
 			);
 
 		};

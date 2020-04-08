@@ -24,7 +24,7 @@ const init = () => {
 		let linksData = [];
 
 		let simulation;
-		let node;
+		// let node;
 		let link;
 
 		//size
@@ -93,13 +93,13 @@ const init = () => {
 		const updateSimulation = (tag, action) => {
 
 			if (!simulation) startSimulation();
-			
+
 			simulation.stop();
 
 			//Add tag node if it is not already added.
 			const _node = getNodeById(tag.id);
 			if (!_node) {
-			// if ($scope.netVis.nodes.indexOf(tag) === -1) {
+				// if ($scope.netVis.nodes.indexOf(tag) === -1) {
 				tag.weight = 0;
 				$scope.netVis.nodes.push(tag);
 			}
@@ -114,7 +114,7 @@ const init = () => {
 
 			//load data
 			// if (!_node || tag.linksAdded) {
-			$http.get(`/nodes/${tag.id}`).then( res => {
+			$http.get(`/nodes/${tag.id}`).then(res => {
 
 				if (res.status === 404 || res.status === 500) return [];
 
@@ -124,35 +124,35 @@ const init = () => {
 					tag.relations = res.data.relations;
 
 					for (const relation of tag.relations) {
-	
+
 						let index;
 						let endobj = relation;
-	
+
 						//add to relatoon 
 						index = $scope.testInById(relation._id, $scope.netVis.researchers);
 						if (index > -1) endobj = $scope.netVis.researchers[index];
-	
+
 						index = $scope.testInById(relation._id, $scope.netVis.nodes);
 						if (index > -1) endobj = $scope.netVis.nodes[index];
-	
+
 						const nodeRelated = getNodeById(endobj._id);
 						if (!nodeRelated) {
-						// if ($scope.netVis.nodes.indexOf(endobj) === -1) {
+							// if ($scope.netVis.nodes.indexOf(endobj) === -1) {
 							endobj.weight = 0;
 							$scope.netVis.nodes.push(endobj);
 							if (_node) _node.weight++;
 						}
-	
+
 						///add link
 						$scope.addLink(tag, endobj);
-	
+
 					}
 				}
-				
+
 				$scope.updateForceLayout();
 
-				
-			}, res => {
+
+			}, () => {
 				return false;
 			});
 			// } else {
@@ -167,7 +167,7 @@ const init = () => {
 			return index;
 		};
 
-		const getNodeById = tagID => $scope.netVis.nodes.find( node => node.id === tagID);
+		const getNodeById = tagID => $scope.netVis.nodes.find(node => node.id === tagID);
 
 		$scope.addLink = (start, end) => {
 
@@ -243,18 +243,18 @@ const init = () => {
 					//map type to a number
 					$scope.clusterNest.forEach(d => {
 						switch (d.key) {
-						case 'Interest':
-							d.keyNum = 1;
-							break;
-						case 'Researcher':
-							d.keyNum = 2;
-							break;
-						case 'Department':
-							d.keyNum = 3;
-							break;
-						default:
-							d.keyNum = 0;
-							break;
+							case 'Interest':
+								d.keyNum = 1;
+								break;
+							case 'Researcher':
+								d.keyNum = 2;
+								break;
+							case 'Department':
+								d.keyNum = 3;
+								break;
+							default:
+								d.keyNum = 0;
+								break;
 						}
 					});
 
@@ -317,7 +317,7 @@ const init = () => {
 				const c = ($scope.netVisLayout.cluster === 'type') ? 10 : 2;
 				const k = $scope.clusterNest.length * c * this.alpha();
 
-				nodesData.forEach( o => {
+				nodesData.forEach(o => {
 
 					for (let n = 0; n < $scope.clusterNest.length; n++) {
 
@@ -939,150 +939,150 @@ const init = () => {
 		//Listener: Layout Change
 		$scope.$on('networkLayoutChange', (event, source) => {
 
-			if(!simulation) startSimulation();
+			if (!simulation) startSimulation();
 
 			simulation.stop();
 
 			switch (source) {
 
-			case 'display':
+				case 'display':
 
-				if ($scope.netVisLayout.display === 'network') {
-					$scope.netVisLayout.showLinks = true;
+					if ($scope.netVisLayout.display === 'network') {
+						$scope.netVisLayout.showLinks = true;
 
-				} else if ($scope.netVisLayout.display === 'cluster') {
-					$scope.netVisLayout.collision = true;
-					$scope.netVisLayout.showLinks = false;
+					} else if ($scope.netVisLayout.display === 'cluster') {
+						$scope.netVisLayout.collision = true;
+						$scope.netVisLayout.showLinks = false;
 
-				}
+					}
 
-				$scope.updateForceLayout();
-				break;
+					$scope.updateForceLayout();
+					break;
 
-			case 'cluster':
-				$scope.updateForceLayout();
-				break;
+				case 'cluster':
+					$scope.updateForceLayout();
+					break;
 
-			case 'gravity':
-				simulation.force('x', d3.forceX(networkContainerWidth / 2).strength($scope.netVisLayout.gravity * 0.1))
-					.force('y', d3.forceY(networkContainerHeight / 2).strength($scope.netVisLayout.gravity * 0.1))
-					.alpha(1)
-					.restart();
-				break;
+				case 'gravity':
+					simulation.force('x', d3.forceX(networkContainerWidth / 2).strength($scope.netVisLayout.gravity * 0.1))
+						.force('y', d3.forceY(networkContainerHeight / 2).strength($scope.netVisLayout.gravity * 0.1))
+						.alpha(1)
+						.restart();
+					break;
 
-			case 'charge':
-				simulation.force('charge', d3.forceManyBody()
-					.strength($scope.netVisLayout.charge))
-					.alpha(1)
-					.restart();
-				break;
+				case 'charge':
+					simulation.force('charge', d3.forceManyBody()
+							.strength($scope.netVisLayout.charge))
+						.alpha(1)
+						.restart();
+					break;
 
-			case 'distance':
-				simulation.force('link', d3.forceLink(linksData)
-					.id(d => d.id)
-					.distance($scope.netVisLayout.distance))
-					.alpha(1)
-					.restart();
-				break;
+				case 'distance':
+					simulation.force('link', d3.forceLink(linksData)
+							.id(d => d.id)
+							.distance($scope.netVisLayout.distance))
+						.alpha(1)
+						.restart();
+					break;
 
-			case 'colission':
-				$scope.updateForceLayout();
-				break;
+				case 'colission':
+					$scope.updateForceLayout();
+					break;
 
-			case 'showNode':
-				$scope.updateForceLayout();
-				break;
+				case 'showNode':
+					$scope.updateForceLayout();
+					break;
 
-			case 'nodeScale':
-				updateNodeSize(true);
-				$scope.updateForceLayout();
-				break;
+				case 'nodeScale':
+					updateNodeSize(true);
+					$scope.updateForceLayout();
+					break;
 
-			case 'nodeSize':
-				updateNodeSize(true);
-				$scope.updateForceLayout();
-				break;
+				case 'nodeSize':
+					updateNodeSize(true);
+					$scope.updateForceLayout();
+					break;
 
-			case 'nodeColor':
-				$scope.updateNodeColor(true);
-				simulation.alpha(0.3).restart();
-				break;
+				case 'nodeColor':
+					$scope.updateNodeColor(true);
+					simulation.alpha(0.3).restart();
+					break;
 
-			case 'showTitles':
-				$scope.updateForceLayout();
-				break;
+				case 'showTitles':
+					$scope.updateForceLayout();
+					break;
 
-			case 'titleScale':
-				$scope.updateNodeTitleSize(true);
-				simulation.alpha(0.3)
-					.restart();
-				break;
+				case 'titleScale':
+					$scope.updateNodeTitleSize(true);
+					simulation.alpha(0.3)
+						.restart();
+					break;
 
-			case 'titleInheritColor':
-				$scope.updateNodeTitleColor(true);
-				simulation.alpha(0.3)
-					.restart();
-				break;
+				case 'titleInheritColor':
+					$scope.updateNodeTitleColor(true);
+					simulation.alpha(0.3)
+						.restart();
+					break;
 
-			case 'showLinks':
-				$scope.updateForceLayout();
-				break;
+				case 'showLinks':
+					$scope.updateForceLayout();
+					break;
 
-			case 'linkThickness':
-				$scope.updateLinkThickness();
-				simulation.alpha(0.3)
-					.restart();
-				break;
+				case 'linkThickness':
+					$scope.updateLinkThickness();
+					simulation.alpha(0.3)
+						.restart();
+					break;
 
-			case 'linkColor':
-				$scope.updateLinkColor(true);
-				simulation.alpha(0.3)
-					.restart();
-				break;
+				case 'linkColor':
+					$scope.updateLinkColor(true);
+					simulation.alpha(0.3)
+						.restart();
+					break;
 
-			case 'linkStrenght':
-				simulation.force('link', d3.forceLink(linksData)
-					.id(d => d.id)
-					.distance($scope.netVisLayout.distance)
-					.strength(link => {
-						if ($scope.netVisLayout.linkStrenght === 'max') {
-							return 1 / Math.max(link.source.weight, link.target.weight);
-						} else {
-							return 1 / Math.min(link.source.weight, link.target.weight);
-						}
-					}))
-					.alpha(1)
-					.restart();
+				case 'linkStrenght':
+					simulation.force('link', d3.forceLink(linksData)
+							.id(d => d.id)
+							.distance($scope.netVisLayout.distance)
+							.strength(link => {
+								if ($scope.netVisLayout.linkStrenght === 'max') {
+									return 1 / Math.max(link.source.weight, link.target.weight);
+								} else {
+									return 1 / Math.min(link.source.weight, link.target.weight);
+								}
+							}))
+						.alpha(1)
+						.restart();
 
-				break;
+					break;
 
-			case 'gooeyFX':
-				gooeyFX();
-				simulation.alpha(0.3)
-					.restart();
-				break;
+				case 'gooeyFX':
+					gooeyFX();
+					simulation.alpha(0.3)
+						.restart();
+					break;
 
-			case 'changeColorTheme':
-				$scope.darkTheme = !$scope.darkTheme;
-				if ($scope.darkTheme) {
-					svg.style('background-color', '#000000');
-				} else {
-					svg.style('background-color', 'transparent');
-				}
-				$scope.updateNodeColor(true);
-				$scope.updateLinkColor(true);
-				$scope.updateNodeTitleColor(true);
-				simulation.alpha(0.1)
-					.restart();
-				break;
+				case 'changeColorTheme':
+					$scope.darkTheme = !$scope.darkTheme;
+					if ($scope.darkTheme) {
+						svg.style('background-color', '#000000');
+					} else {
+						svg.style('background-color', 'transparent');
+					}
+					$scope.updateNodeColor(true);
+					$scope.updateLinkColor(true);
+					$scope.updateNodeTitleColor(true);
+					simulation.alpha(0.1)
+						.restart();
+					break;
 
-			case 'sideBar':
-				$scope.eventResize();
-				// simulation.alpha(0.3).restart();
-				break;
+				case 'sideBar':
+					$scope.eventResize();
+					// simulation.alpha(0.3).restart();
+					break;
 
-			default:
-				break;
+				default:
+					break;
 			}
 
 		});
@@ -1096,7 +1096,7 @@ const init = () => {
 
 			//reduce weight
 			if (sourceTag && targetTag) {
-				
+
 				targetTag.weight += value;
 
 				//remove link
@@ -1174,10 +1174,10 @@ const init = () => {
 		}
 
 		/*
-		* Clear visualization
-		*
-		*/
-		$scope.$on('clearTagSelection', event => {
+		 * Clear visualization
+		 *
+		 */
+		$scope.$on('clearTagSelection', () => {
 
 			$scope.netVis.select = false;
 			$scope.netVis.links.splice(0, $scope.netVis.links.length);
@@ -1186,15 +1186,15 @@ const init = () => {
 			$scope.updateForceLayout();
 		});
 
-		$scope.$on('exportGraph', event => {
+		$scope.$on('exportGraph', () => {
 			if (simulation) simulation.stop();
 		});
 
-		$scope.$on('importData', event => {
+		$scope.$on('importData', () => {
 			if (simulation) {
 				$scope.netVis.select = false;
 				$scope.updateForceLayout();
-				if(simulation) simulation.stop();
+				if (simulation) simulation.stop();
 			}
 		});
 

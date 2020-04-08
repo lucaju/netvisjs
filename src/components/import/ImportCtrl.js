@@ -8,10 +8,10 @@ const init = () => {
 	app.controller('ImportCtrl', ($scope, $rootScope, $http, $mdToast) => {
 
 		// html
-		$scope.fileTypes  = ['json','csv'];
+		$scope.fileTypes = ['json', 'csv'];
 		$scope.fileExtension = $scope.fileTypes[0];
 
-		$scope.dataTypes = ['node','relations'];
+		$scope.dataTypes = ['node', 'relations'];
 		$scope.dataType = $scope.dataTypes[0];
 
 		$scope.changeDataType = value => $scope.dataType = value;
@@ -19,7 +19,7 @@ const init = () => {
 		let file;
 		$scope.fileName;
 		$scope.importResults;
-		
+
 		//file
 		$scope.selectFile = () => {
 
@@ -48,7 +48,7 @@ const init = () => {
 				Papa.parse(file, {
 					header: true,
 					dynamicTyping: true,
-					complete:  res => {
+					complete: res => {
 						if (res.data.length > 0) {
 							submitData({
 								data: res.data,
@@ -56,12 +56,14 @@ const init = () => {
 								dataType: $scope.dataType,
 							});
 						} else {
-							$scope.importResults = {error: true};
+							$scope.importResults = {
+								error: true
+							};
 							$scope.showSimpleToastTag('An error occurred!');
 							$scope.$digest();
 						}
 					},
-					error: res => {
+					error: () => {
 						$scope.showSimpleToastTag('An error occurred!');
 						$scope.$digest();
 					}
@@ -84,11 +86,11 @@ const init = () => {
 					});
 				};
 
-				reader.onerror = res => {
+				reader.onerror = () => {
 					$scope.showSimpleToastTag('An error occurred!');
 				};
 
-				reader.onprogress = res => {
+				reader.onprogress = () => {
 					// console.log(res);
 				};
 
@@ -107,17 +109,17 @@ const init = () => {
 					Authorization: `Bearer ${$rootScope.user.token}`
 				},
 				data: payload
-			}).then( res => {
+			}).then(res => {
 
 				file = null;
-				
+
 				if (!res.data) return;
-				
+
 				$scope.importResults = res.data;
 				$rootScope.$broadcast('importData');
 				$scope.showSimpleToastTag('Import succeded.');
 
-			}, res => {
+			}, () => {
 				$scope.showSimpleToastTag('An error occurred!');
 				file = null;
 			});
@@ -127,11 +129,11 @@ const init = () => {
 		$scope.showSimpleToastTag = msg => {
 			$mdToast.show(
 				$mdToast.simple()
-					.textContent(msg)
-					.position('top center')
-					.hideDelay(3000)
-					.toastClass('toast-custom')
-					.parent(angular.element(document.querySelector('#viz-port')))
+				.textContent(msg)
+				.position('top center')
+				.hideDelay(3000)
+				.toastClass('toast-custom')
+				.parent(angular.element(document.querySelector('#viz-port')))
 			);
 
 		};

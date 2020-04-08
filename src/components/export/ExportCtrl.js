@@ -1,4 +1,3 @@
-
 import {saveAs} from 'file-saver';
 import JSZip from 'jszip';
 import Papa from 'papaparse';
@@ -69,8 +68,7 @@ const init = () => {
 			const nodesCSV = Papa.unparse(nodesToExport);
 			const linksCSV = Papa.unparse(linksToExport);
 
-			const data = [
-				{
+			const data = [{
 					data: nodesCSV,
 					name: 'nodes',
 					dataType: 'csv'
@@ -87,7 +85,7 @@ const init = () => {
 		};
 
 		const exportJson = () => {
-			
+
 			//collection
 			const networkToExport = [];
 
@@ -103,20 +101,18 @@ const init = () => {
 			//parser
 			const nodesJson = JSON.stringify(networkToExport, null, ' ');
 
-			const data = [
-				{
-					data: nodesJson,
-					name: 'nodes',
-					dataType: 'json'
-				}
-			];
+			const data = [{
+				data: nodesJson,
+				name: 'nodes',
+				dataType: 'json'
+			}];
 
 			deliverDataset(data);
 
 		};
 
 		const deliverDataset = exportCollection => {
-			
+
 			//if zip
 			if ($scope.zipFiles) {
 
@@ -135,7 +131,7 @@ const init = () => {
 			} else {
 
 				//separated files
-				for (const {name, dataType, data} of exportCollection) {
+				for (const {name,dataType,data} of exportCollection) {
 					const fileBlob = new Blob([data], {
 						type: `text/${dataType}`
 					});
@@ -159,7 +155,7 @@ const init = () => {
 		};
 
 		const exportPNG = () => {
-			
+
 			//remove gooey
 			if ($scope.netVisLayout.gooeyFX) {
 				$scope.netVisLayout.gooeyFX = false;

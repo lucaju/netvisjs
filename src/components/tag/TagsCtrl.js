@@ -23,8 +23,8 @@ const init = () => {
 		$scope.filtered = false;
 
 		$scope.correctInfoButton = {
-			email: $rootScope.project.email,
-			subject: $rootScope.project.title
+			// email: $rootScope.project.email,
+			// subject: $rootScope.project.title
 		};
 
 		$scope.tagListHeightOffset = 42 + 1 + 48 + 135; // top bar + adjust + bottom menu + sub headings categories
@@ -184,7 +184,7 @@ const init = () => {
 				showTagInfoPanelWithData(node);
 
 			}, error => {
-				console.log(error);
+				// console.log(error);
 			});
 		};
 

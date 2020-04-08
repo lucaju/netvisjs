@@ -1,7 +1,7 @@
 import {app} from '../../AppConfig';
 
 const init = () => {
-	app.controller('LoginCtrl', ($rootScope, $scope, $http, $mdColors) => {
+	app.controller('LoginCtrl', ($rootScope, $scope, $http) => {
 
 		$scope.credentials = {
 			email: '',
@@ -32,10 +32,10 @@ const init = () => {
 					'Content-Type': 'application/json'
 				},
 				data: $scope.credentials
-			}).then( res => {
+			}).then(res => {
 
 				if (!res.data) return;
-				if (res.data.error)  {
+				if (res.data.error) {
 					$scope.credentials.error = res.data.error;
 					return;
 				}
@@ -44,7 +44,7 @@ const init = () => {
 				$rootScope.$broadcast('credentials_accepted', res.data);
 
 			}, error => {
-				if (error.data.error)  {
+				if (error.data.error) {
 					$scope.credentials.error = error.data.error;
 				}
 			});
@@ -63,7 +63,7 @@ const init = () => {
 					'Content-Type': 'application/json'
 				},
 				data: $scope.forgot
-			}).then( res => {
+			}).then(res => {
 
 				$scope.forgot.error = null;
 				$scope.forgot.success = true;

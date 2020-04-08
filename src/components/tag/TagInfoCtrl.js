@@ -40,23 +40,23 @@ const init = () => {
 		}
 
 		$scope.tagRelationChipTypeStyle = ({type}) => {
-			
+
 			//  console.log($mdColors.getThemeColor('accent'));
 			if ($scope.tagLinkColoredChip) {
 
 				switch (type) {
 
-				case 'Department':
-					return 'chipAccent';
+					case 'Department':
+						return 'chipAccent';
 
-				case 'Interest':
-					return 'chipPrimary';
+					case 'Interest':
+						return 'chipPrimary';
 
-				case 'Researcher':
-					return 'chipWarn';
+					case 'Researcher':
+						return 'chipWarn';
 
-				default:
-					return null;
+					default:
+						return null;
 				}
 
 			} else {
@@ -78,7 +78,7 @@ const init = () => {
 		$scope.eventResize = () => $scope.updatePosition();
 
 		$scope.updatePosition = () => {
-			
+
 			const position = $mdPanel.newPanelPosition()
 				.relativeTo(document.querySelector('#main'))
 				.addPanelPosition($mdPanel.xPosition.CENTER, $mdPanel.yPosition.ALIGN_BOTTOMS);

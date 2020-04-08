@@ -41,7 +41,6 @@ const init = () => {
 		// angular.forEach($scope.relations, relation => {
 		if ($scope.relations) {
 			for (const relation of $scope.relations) {
-			
 				if (relation.type === 'Department') $scope.departments.push(relation);
 				if (relation.type === 'Researcher') $scope.researchers.push(relation);
 				if (relation.type === 'Interest') $scope.interests.push(relation);
@@ -53,17 +52,17 @@ const init = () => {
 			if ($scope.tagLinkColoredChip) {
 
 				switch (type) {
-				case 'Department':
-					return 'chipAccent';
+					case 'Department':
+						return 'chipAccent';
 
-				case 'Interest':
-					return 'chipPrimary';
+					case 'Interest':
+						return 'chipPrimary';
 
-				case 'Researcher':
-					return 'chipWarn';
+					case 'Researcher':
+						return 'chipWarn';
 
-				default:
-					return null;
+					default:
+						return null;
 				}
 
 			} else {
@@ -326,11 +325,11 @@ const init = () => {
 		$scope.showSimpleToastTag = msg => {
 			$mdToast.show(
 				$mdToast.simple()
-					.textContent(msg)
-					.position('top center')
-					.hideDelay(3000)
-					.toastClass('toast-custom')
-					.parent(angular.element(document.querySelector('#viz-port')))
+				.textContent(msg)
+				.position('top center')
+				.hideDelay(3000)
+				.toastClass('toast-custom')
+				.parent(angular.element(document.querySelector('#viz-port')))
 			);
 
 		};
@@ -403,9 +402,9 @@ const init = () => {
 			}
 
 			request.data = cleanPayload(payload);
-			
 
-			$http(request).then( res => {
+
+			$http(request).then(res => {
 
 				if (res.status === 500 || res.status === 404) {
 					$scope.showSimpleToastTag('An error occurred!');

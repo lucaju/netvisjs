@@ -116,11 +116,11 @@ const init = () => {
 		$scope.showSimpleToastTag = msg => {
 			$mdToast.show(
 				$mdToast.simple()
-					.textContent(msg)
-					.position('top center')
-					.hideDelay(3000)
-					.toastClass('toast-custom')
-					.parent(angular.element(document.querySelector('#viz-port')))
+				.textContent(msg)
+				.position('top center')
+				.hideDelay(3000)
+				.toastClass('toast-custom')
+				.parent(angular.element(document.querySelector('#viz-port')))
 			);
 
 		};
@@ -184,7 +184,7 @@ const init = () => {
 
 			request.data = payload;
 
-			$http(request).then( res => {
+			$http(request).then(res => {
 
 				if (res.status === 400 || res.status === 500) return false;
 
@@ -205,13 +205,12 @@ const init = () => {
 				}
 
 				$scope.showSimpleToastTag(msg);
-				
+
 				$scope.mdPanelRef.close();
 				$rootScope.$broadcast('userAction', {
 					action,
 					data: res.data
 				});
-				
 
 			}, () => {
 				$scope.showSimpleToastTag('An error occurred!');
