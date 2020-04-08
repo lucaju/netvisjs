@@ -42,17 +42,17 @@
     <section id="stage" flex="auto">
             
         <div id="vis-empty"
-             ng-if="netVis.nodes.length == 0"
-             class="centered-axis-x"
-             flex="auto"
-             layout="row"
-             layout-align="center center">
-             <div md-colors="::{color: '{{theme}}-primary-400'}" style="text-align:center">
+            ng-if="netVis.nodes.length == 0"
+            class="centered-axis-x"
+            flex="auto"
+            layout="row"
+            layout-align="center center">
+            <div md-colors="::{color: '{{theme}}-primary-400'}" style="text-align:center">
                 <h1 class=".md-display-4"
                     style="font-size:30px">
                     <span ng-bind-html="emptyCanvas.message"></span>
                 </h1>
-             </div>
+            </div>
         </div>
 
         <div id="viz-port" flex="auto" ng-controller="NetworkCtrl as networkCtrl">
@@ -67,9 +67,9 @@
         <div id="navTab">
 
             <md-tabs md-align-tabs="bottom"
-                     md-no-pagination="false"
-                     md-center-tabs="true"
-                     md-selected="tabSelected">
+                    md-no-pagination="false"
+                    md-center-tabs="true"
+                    md-selected="tabSelected">
                 <md-tab id="tab1" md-active="tabTagsActive">
                     <md-tab-label>
                         <md-icon md-svg-icon="assets/icons/tags.svg"></md-icon>
