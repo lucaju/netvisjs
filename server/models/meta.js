@@ -24,17 +24,7 @@ const metaSchema = mongoose.Schema({
 				throw new Error('Email is invalid');
 			}
 		}
-	},
-	sendgridAPI: {
-		type: String,
-		required: true,
-		trim: true,
-		validate(value) {
-			if (validator.isEmpty(value)) {
-				throw new Error('sendgridAPI invalid');
-			}
-		}
-	},
+	}
 }, {
 	timestamps: true,
 	strict: false
