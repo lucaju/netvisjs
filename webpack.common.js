@@ -1,6 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
-const { CleanWebpackPlugin} = require('clean-webpack-plugin');
+const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
@@ -18,8 +18,7 @@ module.exports = {
 	},
 	devtool: 'inline-source-map',
 	module: {
-		rules: [
-			{
+		rules: [{
 				test: /\.(js|jsx)$/,
 				use: [{
 					loader: 'babel-loader',
@@ -42,8 +41,7 @@ module.exports = {
 			},
 			{
 				test: /\.css$/,
-				use: [
-					{
+				use: [{
 						loader: MiniCssExtractPlugin.loader,
 						options: {
 							// you can specify a publicPath here
@@ -89,33 +87,38 @@ module.exports = {
 			template: './src/install/install.html',
 			filename: 'install/install.html',
 			chunks: ['install/install'],
-			excludeChunks: [ 'app','reset/app' ],
+			excludeChunks: ['app', 'reset/app'],
 			inject: 'head'
 		}),
 		new HtmlWebpackPlugin({
 			template: './src/reset/reset.html',
 			filename: 'reset/index.html',
 			chunks: ['reset/reset'],
-			excludeChunks: [ 'app','install/app' ],
+			excludeChunks: ['app', 'install/app'],
 			inject: 'head'
 		}),
 		new MiniCssExtractPlugin({
 			filename: '[name].css',
 			chunkFilename: '[id].css',
-			moduleFilename: ({name}) => `${name.replace('/js/', '/css/')}.css`,
+			moduleFilename: ({
+				name
+			}) => `${name.replace('/js/', '/css/')}.css`,
 		}),
 		new MiniCssExtractPlugin({
 			filename: 'install/[name].css',
 			chunkFilename: 'install/[id].css',
-			moduleFilename: ({name}) => `${name.replace('/js/', '/css/')}.css`,
+			moduleFilename: ({
+				name
+			}) => `${name.replace('/js/', '/css/')}.css`,
 		}),
 		new MiniCssExtractPlugin({
 			filename: 'reset/[name].css',
 			chunkFilename: 'reset/[id].css',
-			moduleFilename: ({name}) => `${name.replace('/js/', '/css/')}.css`,
+			moduleFilename: ({
+				name
+			}) => `${name.replace('/js/', '/css/')}.css`,
 		}),
-		new CopyWebpackPlugin([
-			{
+		new CopyWebpackPlugin([{
 				from: 'src/app.html',
 				to: ''
 			},
@@ -129,36 +132,18 @@ module.exports = {
 				from: 'src/assets/',
 				to: './assets'
 			},
-			// {
-			// 	from: 'src/api',
-			// 	to: './api'
-			// },
-			// {
-			// 	from: 'src/vendor',
-			// 	to: './vendor'
-			// },
-			// {
-			// 	from: './src/install/*.htom',
-			// 	to: './install/[name].html',
-			// 	toType: 'template'
-			// },
-			// {
-			// 	from: './src/reset/*.htom',
-			// 	to: './install/[name].html',
-			// 	toType: 'template'
-			// }
 		])
 	],
-// optimization: {
-// splitChunks: {
-// 	chunks: 'all',
-// 	minSize: 30000,
-// 	maxSize: 0,
-// 	minChunks: 1,
-// 	maxAsyncRequests: 5,
-// 	maxInitialRequests: 3,
-// 	automaticNameDelimiter: '~',
-// 	name: true,
+	// optimization: {
+	// splitChunks: {
+	// 	chunks: 'all',
+	// 	minSize: 30000,
+	// 	maxSize: 0,
+	// 	minChunks: 1,
+	// 	maxAsyncRequests: 5,
+	// 	maxInitialRequests: 3,
+	// 	automaticNameDelimiter: '~',
+	// 	name: true,
 	// cacheGroups: {
 	// 	vendors: {
 	// 		test: /[\\/]node_modules[\\/]/,
@@ -191,6 +176,6 @@ module.exports = {
 	// 		reuseExistingChunk: true
 	// 	}
 	// }
-// }
+	// }
 	// }
 };

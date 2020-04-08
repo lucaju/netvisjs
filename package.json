@@ -14,9 +14,9 @@
   "main": "index.js",
   "scripts": {
     "start": "env-cmd nodemon ./server/index",
-    "cm": "git-cz",
     "build-dev-watch": "webpack --config webpack.dev.js --debug=true --display-error-details=true  --watch",
-    "build": "webpack --config webpack.prod.js"
+    "build": "webpack --config webpack.prod.js",
+    "cm": "git-cz"
   },
   "dependencies": {
     "@sendgrid/mail": "^7.0.0",
