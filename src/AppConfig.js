@@ -5,7 +5,6 @@ require('angular-material');
 require('angular-messages');
 require('angular-resource');
 require('angular-sanitize');
-// require('ng-device-detector');
 require('v-accordion');
 
 require('angular-material/angular-material.min.css');
@@ -22,7 +21,6 @@ export const app = angular.module('app', [
 	'vAccordion',
 	'ngResource',
 	'ngSanitize',
-	// 'ng.deviceDetector'
 ]);
 
 app.config($mdThemingProvider => {
