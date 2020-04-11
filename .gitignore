@@ -2,7 +2,6 @@
 node_modules/
 
 #dev dir
-data/
-
-.env
-.env_
+/data
+/config
+/coverage
