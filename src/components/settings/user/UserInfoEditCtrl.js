@@ -46,7 +46,9 @@ const init = () => {
 		};
 
 		//https://github.com/bermi/password-generator
-		$scope.generatePassword = () => $scope.user.password = generatePassword(12, false);
+		$scope.generatePassword = () => {
+			if ($scope.user.password === '') return $scope.user.password = generatePassword(12, false);
+		};
 
 		//---------- Save // Delete
 		$scope.saveUser = () => {
@@ -68,7 +70,11 @@ const init = () => {
 
 				//PASSWORD
 				if ($scope.action === 'create') {
-					$scope.payload.password = generatePassword(12, false);
+					if ($scope.user.password === '') {
+						$scope.payload.password = generatePassword(12, false);
+					} else {
+						$scope.payload.password = $scope.user.password;
+					}
 				} else if ($scope.action === 'update') {
 					if (!$scope.user.password) $scope.payload.password = $scope.user.password;
 				}
