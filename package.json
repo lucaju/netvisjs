@@ -13,8 +13,8 @@
   },
   "main": "index.js",
   "scripts": {
-    "start": "env-cmd f ./config/.env node ./server/index",
-    "dev": "env-cmd f ./config/.env nodemon ./server/index",
+    "start": "env-cmd -f ./config/.env node ./server/index",
+    "dev": "env-cmd -f ./config/.env nodemon ./server/index",
     "build-dev-watch": "webpack --config webpack.dev.js --debug=true --display-error-details=true  --watch",
     "build": "webpack --config webpack.prod.js",
     "test": "env-cmd -f ./config/.test.env jest --runInBand --forceExit",
