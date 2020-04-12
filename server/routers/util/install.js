@@ -22,7 +22,7 @@ SENDGRID_API_KEY=${credentials.meta.sendgridAPI}
 #JWT_TOKEN_SECRET
 JWT_SECRET=${jwt_token_secret}`;
 
-    await fs.writeFile('.env', env)
+    await fs.writeFile('./config/.env', env)
         .catch(() => {
             throw new Error('Installation failed.');
         });
@@ -70,7 +70,7 @@ JWT_SECRET=${jwt_token_secret}`;
     //create password token
     const pwdToken = await user.generatePwdToken();
 
-    //send email.
+    // send email.
     await sendWelcomeEmail({
         _id: user.id,
         email: user.email,
@@ -81,6 +81,6 @@ JWT_SECRET=${jwt_token_secret}`;
     return meta;
 };
 
-const eraseENV = async () => await fs.writeFile('.env', '');
+const eraseENV = async () => await fs.writeFile('config/.env', '');
 
 module.exports = install;
