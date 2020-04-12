@@ -48,7 +48,7 @@ const nodeResearcher = {
 
 const connectDatabase = async () => {
     mongo = await mongoDB.connect().catch(() => {
-        throw new Error('NetVis need to be install!');
+        throw new Error('NetVis need to be installed!');
     });
 };
 
