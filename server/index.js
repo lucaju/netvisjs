@@ -8,7 +8,7 @@ app.listen(port, async () => {
 	// connect MongoDB
 	await mongoDB.connect()
 		.catch(() => {
-			console.log('NetVis need to be install!');
+			console.log('NetVis need to be installed!');
 		});
 
 	console.log(`App listening on port ${port}!`);
