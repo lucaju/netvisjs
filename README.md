@@ -181,4 +181,4 @@ The files are available in the ‘dist’ folder of this project.
 
 On the browser, navigate to the folder you put the files on your localhost *e.g.*, projects/netvis/index.php
 The app guides you through a step-by-step installation on the first time you run it. Follow the instructions.
-The installation process creates an environment variable file (.env) to store the database credentials.
+The installation process creates an environment variable file (config/.env) to store the database credentials.
