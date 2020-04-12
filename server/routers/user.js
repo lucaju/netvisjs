@@ -24,7 +24,7 @@ router.use(express.json());
  */
 router.get('/:id', auth, async (req, res) => {
 	//if cuurrent user
-	if (req.params.id === 'me') res.send(req.user);
+	if (req.params.id === 'me') return res.send(req.user);
 
 	//any other user
 	const user = await User.findById(req.params.id)
@@ -32,7 +32,9 @@ router.get('/:id', auth, async (req, res) => {
 			res.status(500).send(error);
 		});
 
-	if (!user) res.status(404).send();
+	// console.log(user);
+
+	if (!user) return res.status(404).send();
 
 	res.status(200).send(user);
 });
@@ -47,14 +49,12 @@ router.get('/:id', auth, async (req, res) => {
  * get/
  */
 router.get('/', auth, async (req, res) => {
-	const users = await User.find().sort({
+	const users = await User.find()
+		.sort({
 			firstName: 'asc'
-		})
-		.catch((error) => {
+		}).catch((error) => {
 			res.status(500).send(error);
 		});
-
-	if (!users) res.status(404).send();
 
 	res.status(200).send(users);
 });
@@ -74,7 +74,7 @@ router.get('/', auth, async (req, res) => {
  * ...
  * }
  */
-router.post('/', async (req, res) => {
+router.post('/', auth, async (req, res) => {
 	try {
 		const user = new User(req.body);
 		await user.save();
@@ -116,7 +116,7 @@ router.patch('/:id', auth, async (req, res) => {
 
 	//check valid operation
 	const updates = Object.keys(req.body);
-	const allowedUpdates = ['firstName', 'lastName', 'email', 'password', 'level'];
+	const allowedUpdates = ['firstName', 'lastName', 'password', 'level'];
 	const isValidOperation = updates.every((update) => allowedUpdates.includes(update));
 
 	const passwordUpdate = allowedUpdates.find(type => type === 'password');
@@ -226,10 +226,7 @@ router.post('/logout', auth, async (req, res) => {
 		return token.token !== req.token;
 	});
 
-	await req.user.save()
-		.catch(() => {
-			res.status(500).send();
-		});
+	await req.user.save();
 
 	res.status(200).send();
 });
@@ -245,11 +242,7 @@ router.post('/logout', auth, async (req, res) => {
 router.post('/logoutAll', auth, async (req, res) => {
 	//reset tokens
 	req.user.tokens = [];
-
-	await req.user.save()
-		.catch(() => {
-			res.status(500).send();
-		});
+	await req.user.save();
 
 	res.status(200).send();
 });

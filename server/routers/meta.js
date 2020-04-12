@@ -142,7 +142,6 @@ router.post('/install', async (req, res) => {
             });
         });
 
-
     //E. Response
     res.status(201).send({
         title: meta.title,
@@ -181,17 +180,20 @@ router.get('/', async (req, res) => {
  * get/title
  */
 router.get('/:prop', async (req, res) => {
+    const prop = req.params.prop;
     const meta = await Meta.findOne()
         .catch((error) => {
             res.status(400).send(error);
         });
 
     // if not all or prop doesn't exist
-    if (meta[req.params.prop] === undefined) {
+    if (meta[prop] === undefined) {
         return res.status(400).send('Property not found');
     }
 
-    res.status(200).send(meta[req.params.prop]);
+    res.status(200).send({
+        [prop]: meta[prop]
+    });
 });
 
 /**
@@ -207,13 +209,25 @@ router.get('/:prop', async (req, res) => {
  *  title: 'title'
  * }
  */
-router.post('/', async (req, res) => {
-    const meta = new Meta(req.body);
-    await meta.save()
-        .catch(error => {
-            res.status(400).send(error);
-        });
-    res.status(201).send(meta);
+router.post('/', auth, async (req, res) => {
+
+    const properties = Object.keys(req.body);
+
+    try {
+        const meta = await Meta.findOne();
+
+        const newMeta = meta.toObject();
+
+        properties.forEach((prop) => newMeta[prop] = req.body[prop]);
+        await meta.overwrite(newMeta);
+        await meta.save();
+
+        res.status(200).send(meta);
+
+    } catch (error) {
+        res.status(400).send(error);
+    }
+    
 });
 
 /**
