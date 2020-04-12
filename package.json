@@ -13,9 +13,12 @@
   },
   "main": "index.js",
   "scripts": {
-    "start": "env-cmd nodemon ./server/index",
+    "start": "env-cmd f ./config/.env node ./server/index",
+    "dev": "env-cmd f ./config/.env nodemon ./server/index",
     "build-dev-watch": "webpack --config webpack.dev.js --debug=true --display-error-details=true  --watch",
     "build": "webpack --config webpack.prod.js",
+    "test": "env-cmd -f ./config/.test.env jest --runInBand --forceExit",
+    "test-watch": "env-cmd -f ./config/.test.env jest --watch --runInBand",
     "cm": "git-cz"
   },
   "dependencies": {
@@ -37,7 +40,6 @@
     "express": "^4.17.1",
     "file-saver": "^2.0.2",
     "fs-extra": "^9.0.0",
-    "got": "^10.7.0",
     "gsap": "^3.2.6",
     "jlouvain": "^2.0.0",
     "jsonwebtoken": "^8.5.1",
@@ -56,6 +58,7 @@
     "@babel/core": "^7.9.0",
     "@babel/plugin-transform-runtime": "^7.9.0",
     "@babel/preset-env": "^7.9.5",
+    "@shelf/jest-mongodb": "^1.1.5",
     "babel-eslint": "^10.1.0",
     "babel-loader": "^8.1.0",
     "clean-webpack-plugin": "^3.0.0",
@@ -68,9 +71,13 @@
     "html-loader": "^1.1.0",
     "html-webpack-plugin": "^4.2.0",
     "html-webpack-template": "^6.2.0",
+    "husky": "^4.2.5",
+    "jest": "^25.3.0",
     "mini-css-extract-plugin": "^0.9.0",
+    "nock": "^12.0.3",
     "nodemon": "^2.0.3",
     "style-loader": "^1.1.3",
+    "supertest": "^4.0.2",
     "svg-inline-loader": "^0.8.2",
     "webpack": "^4.42.1",
     "webpack-bundle-analyzer": "^3.6.1",
@@ -83,10 +90,36 @@
       "path": "git-cz"
     }
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run test"
+    }
+  },
   "nodemonConfig": {
     "ignore": [
       "src/*",
-      "dist/*"
+      "dist/*",
+      "coverage/*",
+      "data/*",
+      "tests/*"
     ]
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "preset": "@shelf/jest-mongodb",
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "./server/**/*"
+    ],
+    "coverageDirectory": "./coverage",
+    "coverageThreshold": {
+      "global": {
+        "statements": 70,
+        "branches": 55,
+        "functions": 50,
+        "lines": 70
+      }
+    },
+    "verbose": true
   }
 }
