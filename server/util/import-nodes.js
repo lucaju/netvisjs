@@ -1,4 +1,4 @@
-const Node = require('../../models/node');
+const Node = require('../models/node');
 
 const importNodes = async data => {
     const collection = [];
