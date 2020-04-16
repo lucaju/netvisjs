@@ -1,6 +1,8 @@
 const bodyParser = require('body-parser');
 const express = require('express');
 
+require('./db/mongoDB');
+
 const meta = require('./routers/meta');
 const user = require('./routers/user');
 const node = require('./routers/node');

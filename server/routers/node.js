@@ -2,7 +2,7 @@ const express = require('express');
 
 const auth = require('../middleware/auth');
 const Node = require('../models/node');
-const utilities = require('./util/import-nodes');
+const utilities = require('../util/import-nodes');
 
 
 const router = new express.Router();
