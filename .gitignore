@@ -5,3 +5,13 @@ node_modules/
 /data
 /config
 /coverage
+
+/docker/certs
+/docker/mongodb/config.mongodb.env
+/docker/netvis/config.json
+/docker/traefik/config/*
+
+/docker/docker-compose-trafik.yml
+/docker/docker-compose.dev.yml
+
+Dockerfile.dev
