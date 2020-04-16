@@ -1,28 +1,15 @@
 const mongoose = require('mongoose');
 
-let mongoURI = `mongodb://${process.env.MONGODB_HOST}:${process.env.MONGODB_PORT}/${process.env.MONGODB_DATABASE}`;
+const install = require('./install.js');
 
-const connect = async (credentials) => {
+const setup = async () => {
+	await install();
+};
 
-	//check credentials
-	if (!process.env.MONGODB_HOST ||
-		!process.env.MONGODB_PORT ||
-		!process.env.MONGODB_DATABASE) {
-
-		if (!credentials) {
-			throw new Error('Redirect to install');
-		}
-	}
-
-	//check overwrite credentials
-	if (credentials) {
-		mongoURI = `mongodb://${credentials.host}:${credentials.port}/${credentials.database}`;
-	} else {
-		mongoURI = `mongodb://${process.env.MONGODB_HOST}:${process.env.MONGODB_PORT}/${process.env.MONGODB_DATABASE}`;
-	}
-
-	//connect
-	await mongoose.connect(mongoURI, {
+if (!process.env.MONGO_URI) {
+	setup();
+} else {
+	mongoose.connect(process.env.MONGO_URI, {
 		useNewUrlParser: true,
 		useUnifiedTopology: true,
 		useCreateIndex: true,
@@ -30,13 +17,5 @@ const connect = async (credentials) => {
 	}).catch(error => {
 		throw new Error(error);
 	});
-
-	return true;
-};
-
-const close = async () => await mongoose.connection.close();
-
-module.exports = {
-	connect,
-	close
-};
+	// console.log('Netvis connected!');
+}
