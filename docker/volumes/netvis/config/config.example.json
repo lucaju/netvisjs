@@ -1,0 +1,21 @@
+{
+	"mongoDB": {
+		"host": "mongo",
+		"port": "27017",
+		"rootUser": "root",
+		"rootPWD": "root",
+		"database": "netvis"
+	},
+	"user": {
+		"firstName": "Admin",
+		"lastName": "",
+		"email": "your@email.com",
+		"password": "yourPassword"
+	},
+	"meta": {
+		"title": "Netvis",
+		"url": "http://localhost",
+		"jwtSecret": "SomeSecret",
+		"sendgripdAPI": ""
+	}
+}

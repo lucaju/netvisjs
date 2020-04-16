@@ -1,0 +1,30 @@
+version: "3.7"
+
+services:
+  netvis:
+    container_name: netvis
+    restart: unless-stopped
+    image: lucaju/netvis
+    volumes:
+      - ./volumes/netvis/config/:/app/config/
+    depends_on:
+      - mongo
+    ports:
+      - 80:3000
+    networks:
+      - netvis
+
+  mongo:
+    container_name: mongo
+    restart: unless-stopped
+    image: mongo
+    env_file: ./volumes/mongodb/config/mongodb.env
+    volumes:
+      - ./volumes/mongodb/data/db:/data/db
+    ports:
+      - 21017:21017
+    networks:
+      - netvis
+
+networks:
+  netvis:

@@ -1,0 +1,6 @@
+.git
+npm-debug.log
+/dist
+/data
+/coverage
+/node_modules
