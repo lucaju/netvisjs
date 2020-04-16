@@ -9,7 +9,6 @@ module.exports = {
 	mode: 'none', // all mode defaults for dev and prod and set in the respective configs
 	entry: {
 		app: './src/AppConfig.js',
-		'install/install': './src/install/AppInstallConfig.js',
 		'reset/reset': './src/reset/AppResetConfig.js'
 	},
 	output: {
@@ -84,13 +83,6 @@ module.exports = {
 			inject: 'head'
 		}),
 		new HtmlWebpackPlugin({
-			template: './src/install/install.html',
-			filename: 'install/install.html',
-			chunks: ['install/install'],
-			excludeChunks: ['app', 'reset/app'],
-			inject: 'head'
-		}),
-		new HtmlWebpackPlugin({
 			template: './src/reset/reset.html',
 			filename: 'reset/index.html',
 			chunks: ['reset/reset'],
@@ -100,13 +92,6 @@ module.exports = {
 		new MiniCssExtractPlugin({
 			filename: '[name].css',
 			chunkFilename: '[id].css',
-			moduleFilename: ({
-				name
-			}) => `${name.replace('/js/', '/css/')}.css`,
-		}),
-		new MiniCssExtractPlugin({
-			filename: 'install/[name].css',
-			chunkFilename: 'install/[id].css',
 			moduleFilename: ({
 				name
 			}) => `${name.replace('/js/', '/css/')}.css`,
