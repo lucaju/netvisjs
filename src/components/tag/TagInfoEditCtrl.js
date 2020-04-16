@@ -48,7 +48,6 @@ const init = () => {
 		}
 
 		$scope.tagRelationChipTypeStyle = ({type}) => {
-			//  console.log($mdColors.getThemeColor('accent'));
 			if ($scope.tagLinkColoredChip) {
 
 				switch (type) {
@@ -425,7 +424,7 @@ const init = () => {
 				});
 
 			}, error => {
-				console.log(error);
+				// console.log(error);
 			});
 
 		};
