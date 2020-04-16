@@ -6,10 +6,10 @@ node_modules/
 /config
 /coverage
 
-/docker/certs
-/docker/mongodb/config.mongodb.env
-/docker/netvis/config.json
-/docker/traefik/config/*
+/docker/volumes/certs
+/docker/volumes/mongodb/config/mongodb.env
+/docker/volumes/netvis/config/config.json
+/docker/volumes/traefik/*
 
 /docker/docker-compose-trafik.yml
 /docker/docker-compose.dev.yml
