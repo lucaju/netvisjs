@@ -2,9 +2,7 @@ const request = require('supertest');
 const app = require('../server/app');
 const Node = require('../server/models/node');
 const {
-    connectDatabase,
     setupDatabase,
-    closeDatabase,
     userAdmin,
     nodeDepartmentId,
     nodeInterestId,
@@ -16,9 +14,7 @@ const {
 
 describe('NetVis Nodes API', () => {
 
-    beforeAll(async () => await connectDatabase());
     beforeEach(setupDatabase);
-    afterAll(async () => await closeDatabase());
 
     describe('Get Nodes', () => {
         test('Should get Node by id', async () => {

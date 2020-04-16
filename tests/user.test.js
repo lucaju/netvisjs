@@ -2,9 +2,7 @@ const request = require('supertest');
 const app = require('../server/app');
 const User = require('../server/models/user');
 const {
-    connectDatabase,
     setupDatabase,
-    closeDatabase,
     userAdminID,
     userAdmin
 } = require('./fixtures/fixtures');
@@ -15,9 +13,7 @@ const {
 
 describe('NetVis Users API', () => {
 
-    beforeAll(async () => await connectDatabase());
     beforeEach(setupDatabase);
-    afterAll(async () => await closeDatabase());
 
     describe('User Login', () => {
         test('Should login user', async () => {

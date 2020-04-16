@@ -1,11 +1,10 @@
-const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
-const mongoDB = require('../../server/db/mongoDB');
+const mongoose = require('mongoose');
+
 const Meta = require('../../server/models/meta');
 const User = require('../../server/models/user');
 const Node = require('../../server/models/node');
 
-let mongo;
 
 const meta = {
     title: 'NetVis',
@@ -46,12 +45,6 @@ const nodeResearcher = {
     type: 'Researcher'
 };
 
-const connectDatabase = async () => {
-    mongo = await mongoDB.connect().catch(() => {
-        throw new Error('NetVis need to be installed!');
-    });
-};
-
 const setupDatabase = async () => {
     await Meta.deleteMany();
     await User.deleteMany();
@@ -64,14 +57,8 @@ const setupDatabase = async () => {
     await new Node(nodeResearcher).save();
 };
 
-const closeDatabase = async () => {
-    await mongo.close();
-};
-
 module.exports = {
-    connectDatabase,
     setupDatabase,
-    closeDatabase,
     meta,
     userAdminID,
     userAdmin,
