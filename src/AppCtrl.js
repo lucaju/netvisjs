@@ -84,21 +84,6 @@ const init = () => {
 
 		//................
 
-		//TEST IF DB CONENCTION IS WORKING
-		fetch('/meta/connect', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify({
-				home: true
-			})
-		}).then(res => {
-			if (res.status === 500) {
-				window.location.href = `${window.location.href}install/install.html`;
-			}
-		});
-
 		//get meta -- define title
 		$http.get('/meta').then(res => {
 			if (res.status !== 200) $rootScope.project.title = 'Network Visualization';
