@@ -4,7 +4,7 @@ services:
   netvis:
     container_name: netvis
     restart: unless-stopped
-    image: lucaju/netvis
+    image: lucaju/netvis:latest
     volumes:
       - ./volumes/netvis/config/:/app/config/
     depends_on:
@@ -22,7 +22,7 @@ services:
     volumes:
       - ./volumes/mongodb/data/db:/data/db
     ports:
-      - 21017:21017
+      - 27017:27017
     networks:
       - netvis
 
