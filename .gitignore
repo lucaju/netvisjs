@@ -1,17 +1,42 @@
-#modules
+#Sample data
+/sample_data
+
+#config
+config/*
+!/config/config.example.json
+
+# Docker
+Dockerfile.dev
+
+/docker/*
+!/docker/mongodb/config/mongodb.example.env
+!/docker/netvis/config/config.example.json
+!/docker-compose.yml
+  
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Diagnostic reports (https://nodejs.org/api/report.html)
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+# Coverage directory used by tools like istanbul
+coverage
+*.lcov
+
+# nyc test coverage
+.nyc_output
+
+# Dependency directories
 node_modules/
 
-#dev dir
-/data
-/config
-/coverage
+# Optional npm cache directory
+.npm
 
-/docker/volumes/certs
-/docker/volumes/mongodb/config/mongodb.env
-/docker/volumes/netvis/config/config.json
-/docker/volumes/traefik/*
+# Optional eslint cache
+.eslintcache
 
-/docker/docker-compose-trafik.yml
-/docker/docker-compose.dev.yml
-
-Dockerfile.dev
+# dotenv environment variables file
+.env
+.env.test
