@@ -13,8 +13,11 @@ const importNodes = async data => {
             .catch(error => {
                 throw new Error(error);
             });
+        
+        const newNodeData = nodeData;
+        if (newNodeData.relations) delete newNodeData.relations;
 
-        if (!node) node = new Node(nodeData);
+        if (!node) node = new Node(newNodeData);
 
         //relations
         if (nodeData.relations) {
