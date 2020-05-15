@@ -22,11 +22,11 @@
     "cm": "git-cz"
   },
   "dependencies": {
-    "@sendgrid/mail": "^7.0.1",
+    "@sendgrid/mail": "^7.1.1",
     "angular": "^1.7.9",
     "angular-animate": "^1.7.9",
     "angular-aria": "^1.7.9",
-    "angular-material": "^1.1.21",
+    "angular-material": "^1.1.22",
     "angular-messages": "^1.7.9",
     "angular-resource": "^1.7.9",
     "angular-sanitize": "^1.7.9",
@@ -34,16 +34,16 @@
     "blob-polyfill": "^4.0.20190430",
     "body-parser": "^1.19.0",
     "chalk": "^4.0.0",
-    "d3": "^5.15.1",
+    "d3": "^5.16.0",
     "env-cmd": "^10.1.0",
     "express": "^4.17.1",
     "file-saver": "^2.0.2",
     "gsap": "^3.2.6",
     "jlouvain": "^2.0.0",
     "jsonwebtoken": "^8.5.1",
-    "jszip": "^3.3.0",
-    "luxon": "^1.23.0",
-    "mongoose": "^5.9.9",
+    "jszip": "^3.4.0",
+    "luxon": "^1.24.1",
+    "mongoose": "^5.9.14",
     "ng-device-detector": "^5.1.4",
     "papaparse": "^5.2.0",
     "password-generator": "^2.2.3",
@@ -53,31 +53,31 @@
     "validator": "^13.0.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.9.0",
-    "@babel/plugin-transform-runtime": "^7.9.0",
-    "@babel/preset-env": "^7.9.5",
+    "@babel/core": "^7.9.6",
+    "@babel/plugin-transform-runtime": "^7.9.6",
+    "@babel/preset-env": "^7.9.6",
     "@shelf/jest-mongodb": "^1.1.5",
     "babel-eslint": "^10.1.0",
     "babel-loader": "^8.1.0",
     "clean-webpack-plugin": "^3.0.0",
-    "commitizen": "^4.0.4",
+    "commitizen": "^4.1.2",
     "copy-webpack-plugin": "^5.1.1",
-    "css-loader": "^3.5.2",
-    "eslint": "^6.8.0",
+    "css-loader": "^3.5.3",
+    "eslint": "^7.0.0",
     "file-loader": "^6.0.0",
     "git-cz": "^4.3.1",
     "html-loader": "^1.1.0",
-    "html-webpack-plugin": "^4.2.0",
+    "html-webpack-plugin": "^4.3.0",
     "html-webpack-template": "^6.2.0",
     "husky": "^4.2.5",
-    "jest": "^25.3.0",
+    "jest": "^25.5.4",
     "mini-css-extract-plugin": "^0.9.0",
     "nock": "^12.0.3",
-    "nodemon": "^2.0.3",
-    "style-loader": "^1.1.4",
+    "nodemon": "^2.0.4",
+    "style-loader": "^1.2.1",
     "supertest": "^4.0.2",
     "svg-inline-loader": "^0.8.2",
-    "webpack": "^4.42.1",
+    "webpack": "^4.43.0",
     "webpack-bundle-analyzer": "^3.7.0",
     "webpack-cli": "^3.3.11",
     "webpack-merge": "^4.2.2"
@@ -100,23 +100,5 @@
       "data/*",
       "tests/*"
     ]
-  },
-  "jest": {
-    "testEnvironment": "node",
-    "preset": "@shelf/jest-mongodb",
-    "collectCoverage": true,
-    "collectCoverageFrom": [
-      "./server/**/*"
-    ],
-    "coverageDirectory": "./coverage",
-    "coverageThreshold": {
-      "global": {
-        "statements": 70,
-        "branches": 55,
-        "functions": 50,
-        "lines": 70
-      }
-    },
-    "verbose": true
   }
 }
