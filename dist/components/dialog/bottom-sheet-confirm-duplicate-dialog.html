@@ -1,0 +1,20 @@
+<md-bottom-sheet layout="row"
+    layout-align="space-between center"
+    md-theme="appTheme">
+    <div>
+        <span class="md-subhead">The Researcher {{tag.first}} {{tag.last}} is aready in the database. Are you sure you want to add it anyway?</span>
+    </div>
+    <div layout="row">
+        <md-button flex="15"
+            class="md-primary"
+            type="submit"
+            aria-label="Cancel"
+            ng-click="cancelDialog()">Cancel</md-button>
+
+        <md-button class="md-primary"
+            flex="15"
+            type="submit"
+            aria-label="Yes"
+            ng-click=confirmDuplicate()>Yes</md-button>
+    </div>
+</md-bottom-sheet>

@@ -1,0 +1,79 @@
+<div id="importPage" ng-controller="ImportCtrl as importCtrl">
+
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2 class="md-tile">Import</h2>
+        </div>
+    </md-toolbar>
+
+    <md-content class="innerPage">
+        <div ng-show="checkUserLevel(2)">
+            <md-subheader class="md-accent">Import Data</md-subheader>
+
+            <md-content layout="column" flex layout-padding layout-align="start start">
+
+                <div layout="row"
+                    layout-align="end center"
+                    flex="100"
+                    layout-fill
+                    layout-padding>
+                    
+                    <md-input-container flex="80">
+
+                        <label class="md-body-1">File Type</label>
+                        <md-select ng-model="fileExtension" class="md-body-1 no-vertical-margin">
+                            <md-option ng-value="option"
+                                ng-repeat="option in fileTypes">
+                                {{ option }}
+                            </md-option>
+                        </md-select>
+
+                        <md-radio-group id="csv-data-kind"
+                            ng-model="csvDataStructure"
+                            ng-if="fileExtension === 'csv'">
+                            <div flex layout="row">
+                                <div ng-repeat='option in dataTypes'>
+                                    <md-radio-button value="{{option}}"
+                                        ng-click="changeDataType(option)"
+                                        class="md-primary">
+                                        {{option}}
+                                    </md-radio-button>
+                                </div>
+                            </div>
+                        </md-radio-group>
+
+                    </md-input-container>
+
+                    <md-button type="submit"
+                        name="getData"
+                        ng-click="selectFile()">
+                        <md-icon md-font-icon="material-icons">file_upload</md-icon>
+                    </md-button>
+
+                    <input id="file-input"
+                        type="file"
+                        name="file"
+                        accept=".{{fileExtension}}"
+                        style="display: none;" />
+                </div>
+
+            </md-content>
+
+            <md-divider style="margin-top: 20px;"></md-divider>
+
+            <!-- <md-content layout="column" flex layout-padding>
+                <span class="md-body-1" ng-show="fileName">File: {{fileName}}</span>
+                <div class="md-caption" ng-show="importResults">
+                    <span ng-show="importResults.nodesAdded > 0">Nodes added: {{importResults.nodesAdded}}<br/></span>
+                    <span ng-show="importResults.nodesUpdated > 0">Nodes updated: {{importResults.nodesUpdated}}<br/></span>
+                    <span ng-show="importResults.connectionsAdded > 0">Connections added: {{importResults.connectionsAdded}}<br/></span>
+                    <span ng-show="importResults.importErros > 0">Errors found: {{importResults.importErros}}</span>
+                    <span ng-show="importResults.error">Unable to import data.</span>
+                </div> 
+            </md-content> -->
+
+                
+        </div>
+    </md-content>
+ 
+</div>
