@@ -10,7 +10,8 @@ const reset = require('./routers/reset');
 
 const app = express();
 
-app.use(bodyParser.json()); // support json encoded bodies
+app.use(bodyParser.json({ limit: '5mb' })); // support json encoded bodies
+// app.use(bodyParser.json()); 
 
 //routers
 app.use('/meta', meta);
