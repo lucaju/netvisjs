@@ -103,7 +103,8 @@ module.exports = {
 				name
 			}) => `${name.replace('/js/', '/css/')}.css`,
 		}),
-		new CopyWebpackPlugin([{
+		new CopyWebpackPlugin({
+			patterns: [{
 				from: 'src/app.html',
 				to: ''
 			},
@@ -117,7 +118,7 @@ module.exports = {
 				from: 'src/assets/',
 				to: './assets'
 			},
-		])
+		]})
 	],
 	// optimization: {
 	// splitChunks: {
