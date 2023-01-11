@@ -40,7 +40,7 @@
     "file-saver": "^2.0.2",
     "gsap": "^3.2.6",
     "jlouvain": "^2.0.0",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^9.0.0",
     "jszip": "^3.4.0",
     "luxon": "^1.24.1",
     "mongoose": "^5.9.14",
