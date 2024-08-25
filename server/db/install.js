@@ -12,12 +12,12 @@ const install = async () => {
     console.log(chalk.yellow('Setup Netvis'));
 
     //A. setup MongoDB
-    const mongoCredentials = `${process.env.MONGODB_ROOT_USERNAME}:${process.env.MONGODB_ROOT_PASSWORD}`
-    const mongoServer = `${process.env.MONGODB_HOST}:${process.env.MONGODB_PORT}`;
-    const mongoDB = `${process.env.MONGODB_DATABASE}`;
+    // const mongoCredentials = `${process.env.MONGODB_ROOT_USERNAME}:${process.env.MONGODB_ROOT_PASSWORD}`
+    // const mongoServer = `${process.env.MONGODB_HOST}:${process.env.MONGODB_PORT}`;
+    // const mongoDB = `${process.env.MONGODB_DATABASE}`;
 
-    // process.env.MONGO_URI = `mongodb://${mongoCredentials}${mongoServer}${mongoDB}?authSource=admin`;
-    process.env.MONGO_URI = `mongodb://${mongoCredentials}@142.132.164.59:${process.env.MONGODB_PORT}/${mongoDB}?authSource=admin`
+    // process.env.MONGO_URI = `mongodb://${mongoCredentials}@142.132.164.59:${process.env.MONGODB_PORT}/${mongoDB}?authSource=admin`
+    process.env.MONGO_URI = process.env.DATABASE_URL;
     console.log(process.env.MONGO_URI)
 
     //B. Connect MongoDB
