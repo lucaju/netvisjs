@@ -11,19 +11,16 @@ const install = async () => {
 
     console.log(chalk.yellow('Setup Netvis'));
 
-    //A. Add enviroment variables
-    // addEnvVar();
-
-    //B. setup MongoDB
-    const mongoCredentials = (process.env.MONGODB_ROOT_USERNAME && process.env.MONGODB_ROOT_PASSWORD) ? `${process.env.MONGODB_ROOT_USERNAME}:${process.env.MONGODB_ROOT_PASSWORD}@` : '';
+    //A. setup MongoDB
+    const mongoCredentials = `${process.env.MONGODB_ROOT_USERNAME}:${process.env.MONGODB_ROOT_PASSWORD}`
     const mongoServer = `${process.env.MONGODB_HOST}:${process.env.MONGODB_PORT}`;
-    const mongoDB = `/${process.env.MONGODB_DATABASE}`;
+    const mongoDB = `${process.env.MONGODB_DATABASE}`;
 
     // process.env.MONGO_URI = `mongodb://${mongoCredentials}${mongoServer}${mongoDB}?authSource=admin`;
-    process.env.MONGO_URI = `mongodb://${process.env.MONGODB_ROOT_USERNAME}:${process.env.MONGODB_ROOT_PASSWORD}@142.132.164.59:${process.env.MONGODB_PORT}/${process.env.MONGODB_DATABASE}?authSource=admin`
+    process.env.MONGO_URI = `mongodb://${mongoCredentials}@142.132.164.59:${process.env.MONGODB_PORT}/${mongoDB}?authSource=admin`
     console.log(process.env.MONGO_URI)
 
-    //C. Connect MongoDB
+    //B. Connect MongoDB
     let connectionCoolDown = 3000;
     let connectionAttempts = 0;
     let connected = false;
@@ -41,7 +38,7 @@ const install = async () => {
         await waitToReconnect(connectionAttempts * connectionCoolDown);
     }
 
-    //D. Check innitial data
+    //C. Check innitial data
     // if initial is already recorded
     const dbREady = await checkInitData();
     if (dbREady) {
@@ -49,16 +46,11 @@ const install = async () => {
         return;
     }
 
+    //D. Check innitial data
     console.log(chalk.blue(' - Installing Netvis!'));
 
     console.log('   - Adding metadata');
 
-    //E. METADATA
-    // const meta = new Meta({
-    //     title: config.meta.title,
-    //     url: config.meta.url,
-    //     email: config.user.email
-    // });
     const meta = new Meta({
         title: process.env.META_TITLE,
         url: process.env.META_URL,
@@ -72,21 +64,11 @@ const install = async () => {
 
     console.log('   - Adding admin user');
 
-
-    //F. ADMIN USER
-    // const user = new User({
-    //     firstName: config.user.firstName,
-    //     lasttName: config.user.lasttName,
-    //     email: config.user.email,
-    //     password: config.user.password,
-    //     level: 0
-    // });
-
     const user = new User({
         firstName: process.env.ADMIN_FIRST_NAME,
         lasttName: process.env.ADMIN_LAST_NAME,
         email: process.env.ADMIN_EMAIL,
-        password: cprocess.env.ADMIN_PWD,
+        password: process.env.ADMIN_PWD,
         level: 0
     });
 
@@ -95,7 +77,7 @@ const install = async () => {
             throw new Error();
         });
 
-    //G. Close connection
+    //E. Close connection
     // await mongoose.connection.close();
 
     console.log(chalk.green('Netvis Installed and Ready!'));
@@ -109,22 +91,6 @@ const waitToReconnect = async ms => {
         setTimeout(resolve, ms);
     });
 };
-
-// const addEnvVar = () => {
-
-//     process.env.MONGODB_HOST = config.mongoDB.host;
-//     process.env.MONGODB_PORT = config.mongoDB.port;
-
-//     if (config.mongoDB.rootUser && config.mongoDB.rootUser !== '') process.env.MONGODB_ROOT_USERNAME = config.mongoDB.rootUser;
-//     if (config.mongoDB.rootPWD && config.mongoDB.rootPWD !== '') process.env.MONGODB_ROOT_PASSWORD = config.mongoDB.rootPWD;
-
-//     process.env.MONGODB_DATABASE = config.mongoDB.database;
-
-//     process.env.SENDGRID_API_KEY = config.meta.sendgripdAPI;
-//     process.env.JWT_SECRET = config.meta.jwtSecret;
-
-//     console.log(chalk.blue(' - Setup enviroment'));
-// };
 
 const checkInitData = async () => {
     let installed = true;
