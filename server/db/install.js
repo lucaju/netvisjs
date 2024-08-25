@@ -84,7 +84,7 @@ const install = async () => {
 
     const user = new User({
         firstName: process.env.ADMIN_FIRST_NAME,
-        lasttName: cprocess.env.ADMIN_LAST_NAME,
+        lasttName: process.env.ADMIN_LAST_NAME,
         email: process.env.ADMIN_EMAIL,
         password: cprocess.env.ADMIN_PWD,
         level: 0
