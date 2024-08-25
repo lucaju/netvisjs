@@ -12,7 +12,7 @@ const install = async () => {
     console.log(chalk.yellow('Setup Netvis'));
 
     //A. Add enviroment variables
-    addEnvVar();
+    // addEnvVar();
 
     //B. setup MongoDB
     const mongoCredentials = (process.env.MONGODB_ROOT_USERNAME && process.env.MONGODB_ROOT_PASSWORD) ? `${process.env.MONGODB_ROOT_USERNAME}:${process.env.MONGODB_ROOT_PASSWORD}@` : '';
@@ -53,10 +53,15 @@ const install = async () => {
     console.log('   - Adding metadata');
 
     //E. METADATA
+    // const meta = new Meta({
+    //     title: config.meta.title,
+    //     url: config.meta.url,
+    //     email: config.user.email
+    // });
     const meta = new Meta({
-        title: config.meta.title,
-        url: config.meta.url,
-        email: config.user.email
+        title: process.env.META_TITLE,
+        url: process.env.META_URL,
+        email: process.env.ADMIN_EMAIL
     });
 
     await meta.save()
@@ -68,11 +73,19 @@ const install = async () => {
 
 
     //F. ADMIN USER
+    // const user = new User({
+    //     firstName: config.user.firstName,
+    //     lasttName: config.user.lasttName,
+    //     email: config.user.email,
+    //     password: config.user.password,
+    //     level: 0
+    // });
+
     const user = new User({
-        firstName: config.user.firstName,
-        lasttName: config.user.lasttName,
-        email: config.user.email,
-        password: config.user.password,
+        firstName: process.env.ADMIN_FIRST_NAME,
+        lasttName: cprocess.env.ADMIN_LAST_NAME,
+        email: process.env.ADMIN_EMAIL,
+        password: cprocess.env.ADMIN_PWD,
         level: 0
     });
 
@@ -96,21 +109,21 @@ const waitToReconnect = async ms => {
     });
 };
 
-const addEnvVar = () => {
+// const addEnvVar = () => {
 
-    process.env.MONGODB_HOST = config.mongoDB.host;
-    process.env.MONGODB_PORT = config.mongoDB.port;
+//     process.env.MONGODB_HOST = config.mongoDB.host;
+//     process.env.MONGODB_PORT = config.mongoDB.port;
 
-    if (config.mongoDB.rootUser && config.mongoDB.rootUser !== '') process.env.MONGODB_ROOT_USERNAME = config.mongoDB.rootUser;
-    if (config.mongoDB.rootPWD && config.mongoDB.rootPWD !== '') process.env.MONGODB_ROOT_PASSWORD = config.mongoDB.rootPWD;
+//     if (config.mongoDB.rootUser && config.mongoDB.rootUser !== '') process.env.MONGODB_ROOT_USERNAME = config.mongoDB.rootUser;
+//     if (config.mongoDB.rootPWD && config.mongoDB.rootPWD !== '') process.env.MONGODB_ROOT_PASSWORD = config.mongoDB.rootPWD;
 
-    process.env.MONGODB_DATABASE = config.mongoDB.database;
+//     process.env.MONGODB_DATABASE = config.mongoDB.database;
 
-    process.env.SENDGRID_API_KEY = config.meta.sendgripdAPI;
-    process.env.JWT_SECRET = config.meta.jwtSecret;
+//     process.env.SENDGRID_API_KEY = config.meta.sendgripdAPI;
+//     process.env.JWT_SECRET = config.meta.jwtSecret;
 
-    console.log(chalk.blue(' - Setup enviroment'));
-};
+//     console.log(chalk.blue(' - Setup enviroment'));
+// };
 
 const checkInitData = async () => {
     let installed = true;
@@ -118,7 +131,7 @@ const checkInitData = async () => {
     //check if Meta is saved
     await Meta.findOne().catch(() => installed = false);
     //check if admin user exists
-    await User.findByEmail(config.user.email).catch(() => installed = false);
+    await User.findByEmail(process.env.ADMIN_EMAIL).catch(() => installed = false);
 
     return installed;
 };
