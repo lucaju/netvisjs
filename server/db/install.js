@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const Meta = require('../models/meta');
 const User = require('../models/user');
 
-const config = require('../../config/config.json');
+// const config = require('../../config/config.json');
 
 
 const install = async () => {
